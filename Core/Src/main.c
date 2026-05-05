@@ -2,16 +2,12 @@
 /**
   ******************************************************************************
   * @file           : main.c
-  * @brief          : Main program body
+  * @brief          : Main program body - LED Blinking with CMSIS-RTOS v2
   ******************************************************************************
   * @attention
   *
   * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -48,6 +44,20 @@ const osThreadAttr_t defaultTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for Task1 */
+osThreadId_t Task1Handle;
+const osThreadAttr_t Task1_attributes = {
+  .name = "Task1",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for Task2 */
+osThreadId_t Task2Handle;
+const osThreadAttr_t Task2_attributes = {
+  .name = "Task2",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityBelowNormal,
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -56,6 +66,8 @@ const osThreadAttr_t defaultTask_attributes = {
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 void StartDefaultTask(void *argument);
+void StartTask1(void *argument);
+void StartTask2(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -122,6 +134,12 @@ int main(void)
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
+  /* creation of Task1 */
+  Task1Handle = osThreadNew(StartTask1, NULL, &Task1_attributes);
+
+  /* creation of Task2 */
+  Task2Handle = osThreadNew(StartTask2, NULL, &Task2_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -162,16 +180,10 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 
-  /** Configure LSE Drive Capability
-  */
-  HAL_PWR_EnableBkUpAccess();
-  __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
-
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE|RCC_OSCILLATORTYPE_MSI;
-  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
   RCC_OscInitStruct.MSIState = RCC_MSI_ON;
   RCC_OscInitStruct.MSICalibrationValue = 0;
   RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6;
@@ -194,10 +206,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-
-  /** Enable MSI Auto calibration
-  */
-  HAL_RCCEx_EnableMSIPLLMode();
 }
 
 /**
@@ -214,7 +222,6 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
@@ -276,7 +283,11 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+// Helper function to get button state (optional, for Task4)
+uint8_t IsButtonPressed(void)
+{
+  return (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET);
+}
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -292,9 +303,49 @@ void StartDefaultTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    /* Red LED toggles every 1000ms (1 second) */
+    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);  // Red LED
+    osDelay(1000);  // RTOS delay - non-blocking
   }
   /* USER CODE END 5 */
+}
+
+/* USER CODE BEGIN Header_StartTask1 */
+/**
+* @brief Function implementing the Task1 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask1 */
+void StartTask1(void *argument)
+{
+  /* USER CODE BEGIN StartTask1 */
+  /* Infinite loop */
+  for(;;)
+  {
+    HAL_GPIO_TogglePin(GPIOC, Close_End_Pin);  // Green LED
+    osDelay(1000);
+  }
+  /* USER CODE END StartTask1 */
+}
+
+/* USER CODE BEGIN Header_StartTask2 */
+/**
+* @brief Function implementing the Task2 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartTask2 */
+void StartTask2(void *argument)
+{
+  /* USER CODE BEGIN StartTask2 */
+  /* Infinite loop */
+  for(;;)
+  {
+    HAL_GPIO_TogglePin(GPIOC, Open_Led_Pin);  // Blue LED
+    osDelay(200);
+  }
+  /* USER CODE END StartTask2 */
 }
 
 /**

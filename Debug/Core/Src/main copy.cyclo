@@ -1,0 +1,7 @@
+../Core/Src/main copy.c:75:5:main	1
+../Core/Src/main copy.c:99:6:SystemClock_Config	1
+../Core/Src/main copy.c:129:13:MX_GPIO_Init	1
+../Core/Src/main copy.c:180:6:StartDefaultTask	1
+../Core/Src/main copy.c:189:6:BlinkCloseTask	1
+../Core/Src/main copy.c:198:6:BlinkOpenTask	1
+../Core/Src/main copy.c:208:6:Error_Handler	1
