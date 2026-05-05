@@ -1,0 +1,36 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Application",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "jlink",
+            "device": "STM32L412RB",
+            "interface": "swd",
+            "executable": "${workspaceFolder}/build/Target/application/Debug/RTOS_STM32L412RB.elf",
+            "runToEntryPoint": "main",
+            "preLaunchTask": "Build App Debug",
+            "svdFile": "",
+            "serverpath": "JLinkGDBServer",
+            "serverArgs": "-if SWD -speed 4000 -singlerun -port 2331",
+            "searchDir": "${workspaceFolder}/build/Target/application/Debug"
+        },
+        {
+            "name": "Debug Bootloader",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "jlink",
+            "device": "STM32L412RB",
+            "interface": "swd",
+            "executable": "${workspaceFolder}/build/Target/bootloader/Debug/RTOS_STM32L412RB.elf",
+            "runToEntryPoint": "main",
+            "preLaunchTask": "Build BL Debug",
+            "svdFile": "",
+            "serverpath": "JLinkGDBServer",
+            "serverArgs": "-if SWD -speed 4000 -singlerun -port 2331",
+            "searchDir": "${workspaceFolder}/build/Target/bootloader/Debug"
+        }
+    ]
+}
+

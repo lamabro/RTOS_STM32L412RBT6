@@ -1,0 +1,74 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build App Debug",
+            "type": "shell",
+            "command": "cmake --preset=Debug-Application && ninja -C build/Target/application/Debug",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build App Release",
+            "type": "shell",
+            "command": "cmake --preset=Release-Application && ninja -C build/Target/application/Release",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build BL Debug",
+            "type": "shell",
+            "command": "cmake --preset=Debug-Bootloader && ninja -C build/Target/bootloader/Debug",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build BL Release",
+            "type": "shell",
+            "command": "cmake --preset=Release-Bootloader && ninja -C build/Target/bootloader/Release",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Check MISRA C (Cppcheck)",
+            "type": "shell",
+            "command": "cppcheck",
+            "args": [
+                "--addon=misra",
+                "--enable=all",
+                "--inconclusive",
+                "--std=c11",
+                "--language=c",
+                "--force",
+                "--inline-suppr",
+                "--suppress=missingIncludeSystem",
+                "--suppress=misra-config",
+                "--error-exitcode=1",
+                "-I", "${workspaceFolder}/Core/Inc",
+                "-I", "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32L4xx/Include",
+                "-I", "${workspaceFolder}/Drivers/CMSIS/Include",
+                "-I", "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/include",
+                "${workspaceFolder}/Core/Src"
+            ],
+            "problemMatcher": ["$gcc"],
+            "group": "test"
+        },
+        {
+            "label": "Build Unit Tests",
+            "type": "shell",
+            "command": "cmake --preset=Debug-UnitTest && ninja -C build/Target/application/unit_test",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Run Unit Tests",
+            "type": "shell",
+            "command": "bash -c 'cmake --preset=Debug-UnitTest && ninja -C build/Target/application/unit_test && ctest --test-dir build/Target/application/unit_test --output-on-failure'",
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            },
+            "problemMatcher": []
+        }
+    ]
+}

@@ -2,6 +2,7 @@
 /RTOSP1/build/Target/application/Debug/CMakeFiles/docs.dir
 /RTOSP1/build/Target/application/Debug/CMakeFiles/complexity.dir
 /RTOSP1/build/Target/application/Debug/CMakeFiles/docs-full.dir
+/RTOSP1/build/Target/application/Debug/CMakeFiles/cppcheck.dir
 /RTOSP1/build/Target/application/Debug/CMakeFiles/test.dir
 /RTOSP1/build/Target/application/Debug/CMakeFiles/edit_cache.dir
 /RTOSP1/build/Target/application/Debug/CMakeFiles/rebuild_cache.dir

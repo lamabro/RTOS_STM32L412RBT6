@@ -1,0 +1,59 @@
+{
+    // Always use the container preset
+   // "cmake.configureOnOpen": false,
+    "cmake.preferredGenerators": ["Ninja"],
+  //  "cmake.configurePreset": "Debug",
+   // "cmake.buildPreset": "Debug",
+
+    // Use container tools (do NOT override with host paths)
+    "cmake.cmakePath": "cmake",
+
+    // Cppcheck inside container
+    "cppcheck.enable": true,
+    "cppcheck.cppcheckPath": "cppcheck",
+
+    // Include paths inside your repo (mounted into container)
+    "cppcheck.includePaths": [
+       //  "${workspaceFolder}/Core/Inc",
+      //   "${workspaceFolder}/Drivers/CMSIS/Include",
+       //  "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS"
+    ],
+
+    // MISRA + C11
+    "cppcheck.standards": ["c11"],
+    "cppcheck.platform": "unix32",
+    "cppcheck.misraAdddon": true,
+
+    // Better IntelliSense for ARM embedded
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+}
+
+
+
+/**
+  * @brief  The application entry point.
+
+
+{
+    "cmake.cmakePath": "/opt/homebrew/bin/cmake",
+    "cmake.configureArgs": [],
+    "cmake.preferredGenerators": [
+        "Ninja"
+    ]
+}
+
+
+What happens:
+
+✅ Cppcheck runs with explicit path (guaranteed to find it)
+✅ MISRA 2012 checks enabled
+✅ Knows where your include files are (catches header errors)
+✅ Correct platform detection (32-bit vs 64-bit)
+✅ C11 standard enforced
+✅ More likely to catch real issues
+
+
+
+
+  * @retval int
+  */

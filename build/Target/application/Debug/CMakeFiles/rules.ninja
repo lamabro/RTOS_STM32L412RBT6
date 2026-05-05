@@ -27,7 +27,7 @@ rule ASM_COMPILER__RTOSP_STM32L412RB_Debug
 rule C_COMPILER__RTOSP_STM32L412RB_Debug
   depfile = $DEP_FILE
   deps = gcc
-  command = /usr/bin/cmake -E __run_co_compile --cppcheck=/usr/bin/cppcheck --source=$in -- /opt/arm-toolchain/gcc/bin/arm-none-eabi-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = /opt/arm-toolchain/gcc/bin/arm-none-eabi-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -54,7 +54,7 @@ rule CUSTOM_COMMAND
 rule C_COMPILER__STM32_Drivers_Debug
   depfile = $DEP_FILE
   deps = gcc
-  command = /usr/bin/cmake -E __run_co_compile --cppcheck=/usr/bin/cppcheck --source=$in -- /opt/arm-toolchain/gcc/bin/arm-none-eabi-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = /opt/arm-toolchain/gcc/bin/arm-none-eabi-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 
@@ -64,7 +64,7 @@ rule C_COMPILER__STM32_Drivers_Debug
 rule C_COMPILER__FreeRTOS_Debug
   depfile = $DEP_FILE
   deps = gcc
-  command = /usr/bin/cmake -E __run_co_compile --cppcheck=/usr/bin/cppcheck --source=$in -- /opt/arm-toolchain/gcc/bin/arm-none-eabi-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  command = /opt/arm-toolchain/gcc/bin/arm-none-eabi-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
   description = Building C object $out
 
 

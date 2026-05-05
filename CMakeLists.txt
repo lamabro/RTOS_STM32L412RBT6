@@ -25,7 +25,7 @@ set(CONTAINER_CPPCHECK_PATH "/usr/bin/cppcheck")
 set(DOXYGEN_EXECUTABLE "${CONTAINER_DOXYGEN_PATH}")
 
 # Set CPPCheck executable (container path)
-set(CMAKE_C_CPPCHECK "${CONTAINER_CPPCHECK_PATH}")
+#set(CMAKE_C_CPPCHECK "${CONTAINER_CPPCHECK_PATH}"). To be used separately in target properties for better control
 
 # Set Python executable (container path)
 set(Python3_EXECUTABLE "${CONTAINER_PYTHON_PATH}")
@@ -201,6 +201,20 @@ if(LIZARD_EXECUTABLE)
 else()
     message(WARNING "Lizard not found. Complexity analysis target unavailable. Install: pip3 install lizard")
 endif()
+
+add_custom_target(cppcheck
+    COMMAND ${CONTAINER_CPPCHECK_PATH}
+        --enable=all
+        --std=c11
+        --suppress=missingIncludeSystem
+        ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/main.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/freertos.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/stm32l4xx_it.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/stm32l4xx_hal_msp.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/system_stm32l4xx.c
+    COMMENT "Running cppcheck on user application code"
+    VERBATIM
+)
 
 
 
