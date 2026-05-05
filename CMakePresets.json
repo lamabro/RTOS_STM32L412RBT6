@@ -5,34 +5,82 @@
             "name": "default",
             "hidden": true,
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-		    "toolchainFile": "${sourceDir}/cmake/gcc-arm-none-eabi.cmake",
+            "toolchainFile": "${sourceDir}/cmake/gcc-arm-none-eabi.cmake",
             "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
             }
         },
         {
-            "name": "Debug",
+            "name": "Debug-Application",
             "inherits": "default",
+            "binaryDir": "${sourceDir}/build/Target/application/Debug",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
+                "CMAKE_BUILD_TYPE": "Debug",
+                "BUILD_TESTING": "OFF"
             }
         },
         {
-            "name": "Release",
+            "name": "Release-Application",
             "inherits": "default",
+            "binaryDir": "${sourceDir}/build/Target/application/Release",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
+                "CMAKE_BUILD_TYPE": "Release",
+                "BUILD_TESTING": "OFF"
+            }
+        },
+        {
+            "name": "Debug-Bootloader",
+            "inherits": "default",
+            "binaryDir": "${sourceDir}/build/Target/bootloader/Debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "BUILD_TESTING": "OFF"
+            }
+        },
+        {
+            "name": "Release-Bootloader",
+            "inherits": "default",
+            "binaryDir": "${sourceDir}/build/Target/bootloader/Release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "BUILD_TESTING": "OFF"
+            }
+        },
+        {
+            "name": "Debug-UnitTest",
+            "hidden": false,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/Target/application/unit_test",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_TOOLCHAIN_FILE": "",
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++",
+                "BUILD_TESTING_ONLY": "ON",
+                "BUILD_TESTING": "ON"
             }
         }
     ],
     "buildPresets": [
         {
-            "name": "Debug",
-            "configurePreset": "Debug"
+            "name": "Debug-Application",
+            "configurePreset": "Debug-Application"
         },
         {
-            "name": "Release",
-            "configurePreset": "Release"
+            "name": "Release-Application",
+            "configurePreset": "Release-Application"
+        },
+        {
+            "name": "Debug-Bootloader",
+            "configurePreset": "Debug-Bootloader"
+        },
+        {
+            "name": "Release-Bootloader",
+            "configurePreset": "Release-Bootloader"
+        },
+        {
+            "name": "Debug-UnitTest",
+            "configurePreset": "Debug-UnitTest"
         }
     ]
 }

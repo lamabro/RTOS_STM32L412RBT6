@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../RTOSP1/scripts"
+		},
+		{
+			"path": "../RTOSP1/.vscode"
+		}
+	],
+	"settings": {}
+}
