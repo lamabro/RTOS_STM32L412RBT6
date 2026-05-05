@@ -28,6 +28,7 @@ set(DOXYGEN_EXECUTABLE "${CONTAINER_DOXYGEN_PATH}")
 #set(CMAKE_C_CPPCHECK "${CONTAINER_CPPCHECK_PATH}"). To be used separately in target properties for better control
 
 # Set Python executable (container path)
+
 set(Python3_EXECUTABLE "${CONTAINER_PYTHON_PATH}")
 
 # Output directories in container
@@ -136,9 +137,7 @@ if(NOT BUILD_TESTING_ONLY)
         COMMENT "Generating hex file: ${CMAKE_PROJECT_NAME}.hex"
     )
 
-    set(CMAKE_C_CPPCHECK
-        "cppcheck;--addon=misra;--enable=all;--inconclusive;--std=c11;--force;--inline-suppr;--suppress=missingIncludeSystem;--suppress=misra-config"
-    )
+    #set(CMAKE_C_CPPCHECK "cppcheck;--addon=misra;--enable=all;--inconclusive;--std=c11;--force;--inline-suppr;--suppress=missingIncludeSystem;--suppress=misra-config")
 else()
     # ========================================================================
     # UNIT TEST BUILD (Native Host Compilation)

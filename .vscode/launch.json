@@ -5,32 +5,39 @@
             "name": "Debug Application",
             "type": "cortex-debug",
             "request": "launch",
-            "servertype": "jlink",
+
+            "servertype": "external",
+            "gdbTarget": "host.docker.internal:2331",
+
             "device": "STM32L412RB",
             "interface": "swd",
-            "executable": "${workspaceFolder}/build/Target/application/Debug/RTOS_STM32L412RB.elf",
+
+            "executable": "/RTOSP1/build/Target/application/Debug/RTOSP_STM32L412RB.elf",
+            // manually set because WorkspaceFolder does not work inside container, so we need to set the absolute path for the executable
             "runToEntryPoint": "main",
             "preLaunchTask": "Build App Debug",
+
             "svdFile": "",
-            "serverpath": "JLinkGDBServer",
-            "serverArgs": "-if SWD -speed 4000 -singlerun -port 2331",
-            "searchDir": "${workspaceFolder}/build/Target/application/Debug"
+            "searchDir": "/RTOSP1/build/Target/application/Debug"
         },
+
         {
             "name": "Debug Bootloader",
             "type": "cortex-debug",
             "request": "launch",
-            "servertype": "jlink",
+
+            "servertype": "external",
+            "gdbTarget": "host.docker.internal:2331",
+
             "device": "STM32L412RB",
             "interface": "swd",
-            "executable": "${workspaceFolder}/build/Target/bootloader/Debug/RTOS_STM32L412RB.elf",
+
+            "executable": "/RTOSP1/build/Target/bootloader/Debug/RTOSP_STM32L412RB.elf",
             "runToEntryPoint": "main",
             "preLaunchTask": "Build BL Debug",
+
             "svdFile": "",
-            "serverpath": "JLinkGDBServer",
-            "serverArgs": "-if SWD -speed 4000 -singlerun -port 2331",
-            "searchDir": "${workspaceFolder}/build/Target/bootloader/Debug"
+            "searchDir": "/RTOSP1/build/Target/application/Debug"
         }
     ]
 }
-

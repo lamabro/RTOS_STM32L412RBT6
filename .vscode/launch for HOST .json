@@ -1,0 +1,44 @@
+{
+
+    //use this launch.json for debugging on host machine, and use launch for container for debugging inside container. This is because JLinkGDBServer does not work inside container, so we need to use external and connect to JLinkGDBServer running on the host machine
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Application",
+            "type": "cortex-debug",
+            "request": "launch",
+            // manual method is  arm-none-eabi-gdb /RTOSP1/build/Target/application/Debug/RTOS_STM32L412RB.elf. and insdie GDB target remote host.docker.internal:2331
+
+            "servertype": "jlink",   # Does not inside container but works on host machine, so we can use it to debug the application and bootloader separately
+            
+               // Connect to JLinkGDBServer running on the host machine This allows us to debug the application and bootloader separately without needing JLinkGDBServer inside the container
+            "device": "STM32L412RB",
+            "interface": "swd",
+            "executable": "${workspaceFolder}/build/Target/application/Debug/RTOS_STM32L412RB.elf",
+            "runToEntryPoint": "main",
+            "preLaunchTask": "Build App Debug",
+            "svdFile": "",
+            "serverpath": "JLinkGDBServer",
+            "serverArgs": "-if SWD -speed 4000 -singlerun -port 2331",
+            "searchDir": "${workspaceFolder}/build/Target/application/Debug"
+        },
+        {
+            "name": "Debug Bootloader",
+            "type": "cortex-debug",
+            "request": "launch",
+           
+            "gdbTarget": "host.docker.internal:2331",
+            "servertype": "jlink",  For Host machine debugging, we can use jlink directly, but inside container we need to use external and connect to JLinkGDBServer running on the host machine
+            "device": "STM32L412RB",
+            "interface": "swd",
+            "executable": "${workspaceFolder}/build/Target/bootloader/Debug/RTOS_STM32L412RB.elf",
+            "runToEntryPoint": "main",
+            "preLaunchTask": "Build BL Debug",
+            "svdFile": "",
+            "serverpath": "JLinkGDBServer",
+            "serverArgs": "-if SWD -speed 4000 -singlerun -port 2331",
+            "searchDir": "${workspaceFolder}/build/Target/bootloader/Debug"
+        }
+    ]
+}
+

@@ -1,0 +1,16 @@
+{
+  "name": "RTOSP1 STM32 Dev",
+  "image": "rtosp1-rtosp1-dev:latest",
+  "workspaceFolder": "/RTOSP1",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/RTOSP1,type=bind",
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cmake-tools",
+        "marus25.cortex-debug",
+        "ms-vscode.cpptools"
+      ]
+    }
+  }
+}
