@@ -1,3 +1,4 @@
+
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -8,6 +9,7 @@
   *
   * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
+  * CUBEIDE verified
   *
   ******************************************************************************
   */
@@ -15,27 +17,18 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
 /* USER CODE END Includes */
-
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
 /* USER CODE END PTD */
-
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
 /* USER CODE END PD */
-
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
 /* USER CODE END PM */
-
 /* Private variables ---------------------------------------------------------*/
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -59,111 +52,78 @@ const osThreadAttr_t Task2_attributes = {
   .priority = (osPriority_t) osPriorityBelowNormal,
 };
 /* USER CODE BEGIN PV */
-
 /* USER CODE END PV */
-
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 void StartDefaultTask(void *argument);
 void StartTask1(void *argument);
 void StartTask2(void *argument);
-
 /* USER CODE BEGIN PFP */
-
 /* USER CODE END PFP */
-
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
 /* USER CODE END 0 */
-
 /**
   * @brief  The application entry point.
   * @retval int
   */
 int main(void)
 {
-
   /* USER CODE BEGIN 1 */
-
   /* USER CODE END 1 */
-
   /* MCU Configuration--------------------------------------------------------*/
-
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-
   /* USER CODE BEGIN Init */
-
   /* USER CODE END Init */
-
   /* Configure the system clock */
   SystemClock_Config();
-
   /* USER CODE BEGIN SysInit */
-
   /* USER CODE END SysInit */
-
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
   /* USER CODE END 2 */
-
   /* Init scheduler */
   osKernelInitialize();
-
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
-
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
-
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
-
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
-
   /* Create the thread(s) */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
-
   /* creation of Task1 */
   Task1Handle = osThreadNew(StartTask1, NULL, &Task1_attributes);
-
   /* creation of Task2 */
   Task2Handle = osThreadNew(StartTask2, NULL, &Task2_attributes);
-
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
-
   /* USER CODE BEGIN RTOS_EVENTS */
   /* add events, ... */
   /* USER CODE END RTOS_EVENTS */
-
   /* Start scheduler */
   osKernelStart();
-
   /* We should never get here as control is now taken by the scheduler */
-
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
-
 /**
   * @brief System Clock Configuration
   * @retval None
@@ -172,14 +132,12 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-
   /** Configure the main internal regulator output voltage
   */
   if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
   {
     Error_Handler();
   }
-
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
@@ -192,7 +150,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-
   /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
@@ -201,13 +158,11 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     Error_Handler();
   }
 }
-
 /**
   * @brief GPIO Initialization Function
   * @param None
@@ -217,29 +172,22 @@ static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   /* USER CODE BEGIN MX_GPIO_Init_1 */
-
   /* USER CODE END MX_GPIO_Init_1 */
-
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
-
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(PW_24V_GPIO_Port, PW_24V_Pin, GPIO_PIN_RESET);
-
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, Close_End_Pin|Open_Led_Pin, GPIO_PIN_RESET);
-
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(KCE_DE_GPIO_Port, KCE_DE_Pin, GPIO_PIN_RESET);
-
   /*Configure GPIO pin : Push_Button_Pin */
   GPIO_InitStruct.Pin = Push_Button_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(Push_Button_GPIO_Port, &GPIO_InitStruct);
-
   /*Configure GPIO pins : KCE_RS485_TX_Pin KCE_RS485_RX_Pin */
   GPIO_InitStruct.Pin = KCE_RS485_TX_Pin|KCE_RS485_RX_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -247,28 +195,24 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
   /*Configure GPIO pin : PW_24V_Pin */
   GPIO_InitStruct.Pin = PW_24V_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(PW_24V_GPIO_Port, &GPIO_InitStruct);
-
   /*Configure GPIO pins : Close_End_Pin Open_Led_Pin */
   GPIO_InitStruct.Pin = Close_End_Pin|Open_Led_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
   /*Configure GPIO pin : KCE_DE_Pin */
   GPIO_InitStruct.Pin = KCE_DE_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(KCE_DE_GPIO_Port, &GPIO_InitStruct);
-
   /*Configure GPIO pins : RS232_TX_Pin RS232_RX_Pin */
   GPIO_InitStruct.Pin = RS232_TX_Pin|RS232_RX_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -276,12 +220,9 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
   /* USER CODE BEGIN MX_GPIO_Init_2 */
-
   /* USER CODE END MX_GPIO_Init_2 */
 }
-
 /* USER CODE BEGIN 4 */
 // Helper function to get button state (optional, for Task4)
 uint8_t IsButtonPressed(void)
@@ -289,7 +230,6 @@ uint8_t IsButtonPressed(void)
   return (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET);
 }
 /* USER CODE END 4 */
-
 /* USER CODE BEGIN Header_StartDefaultTask */
 /**
   * @brief  Function implementing the defaultTask thread.
@@ -309,7 +249,6 @@ void StartDefaultTask(void *argument)
   }
   /* USER CODE END 5 */
 }
-
 /* USER CODE BEGIN Header_StartTask1 */
 /**
 * @brief Function implementing the Task1 thread.
@@ -328,7 +267,6 @@ void StartTask1(void *argument)
   }
   /* USER CODE END StartTask1 */
 }
-
 /* USER CODE BEGIN Header_StartTask2 */
 /**
 * @brief Function implementing the Task2 thread.
@@ -347,7 +285,6 @@ void StartTask2(void *argument)
   }
   /* USER CODE END StartTask2 */
 }
-
 /**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM6 interrupt took place, inside
@@ -359,17 +296,14 @@ void StartTask2(void *argument)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
-
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM6)
   {
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
-
   /* USER CODE END Callback 1 */
 }
-
 /**
   * @brief  This function is executed in case of error occurrence.
   * @retval None

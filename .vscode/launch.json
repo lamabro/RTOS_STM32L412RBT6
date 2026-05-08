@@ -12,7 +12,8 @@
             "device": "STM32L412RB",
             "interface": "swd",
 
-            "executable": "/RTOSP1/build/Target/application/Debug/RTOSP_STM32L412RB.elf",
+           "executable": "/RTOSP1/build/Target/application/Debug/RTOSP_STM32L412RB.elf",
+           // "executable": "/RTOSP1/Debug/RTOS_STM32L412RB.elf", 
             // manually set because WorkspaceFolder does not work inside container, so we need to set the absolute path for the executable
             "runToEntryPoint": "main",
             "preLaunchTask": "Build App Debug",

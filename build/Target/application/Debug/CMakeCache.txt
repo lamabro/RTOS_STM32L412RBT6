@@ -217,7 +217,7 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 //Path to a program.
 CMAKE_STRIP:FILEPATH=/opt/arm-toolchain/gcc/bin/arm-none-eabi-strip
 
-//No help, variable specified on the command line.
+//The CMake toolchain file
 CMAKE_TOOLCHAIN_FILE:FILEPATH=/RTOSP1/cmake/gcc-arm-none-eabi.cmake
 
 //If this value is on, makefiles will be generated without the
