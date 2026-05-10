@@ -10,7 +10,7 @@
 #define FRAME_SOF       0xAA
 #define FRAME_EOF       0x55
 #define FRAME_SIZE      7       // Fixed-length frame
-
+#define CRC_dummy       0xA1
 // -------------------------------------------------------------
 // Frame structure (logical representation)
 // -------------------------------------------------------------
@@ -24,6 +24,15 @@ typedef struct
     uint8_t crc;        // CRC or checksum
     uint8_t eof;        // End of Frame
 } ProtoFrame_t;
+
+typedef struct
+{
+    SlaveAddressTable_t addressTable;   // Discovered slaves
+    MessageID_t        msgID;              // Last received message ID
+    CommErrorByte_t     errorByte;      // Error flags
+    CommStatusByte_t    statusByte;     // Status flags
+} FrameContext_t;
+
 
 // -------------------------------------------------------------
 // API

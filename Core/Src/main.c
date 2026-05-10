@@ -1,4 +1,5 @@
 
+
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -17,6 +18,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -25,11 +27,13 @@
 /* USER CODE END PTD */
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define FRAME_SIZE 7
 /* USER CODE END PD */
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 /* USER CODE END PM */
 /* Private variables ---------------------------------------------------------*/
+uint8_t txBuffer[FRAME_SIZE]; 
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
@@ -82,7 +86,12 @@ int main(void)
   /* USER CODE BEGIN SysInit */
   /* USER CODE END SysInit */
   /* Initialize all configured peripherals */
+  
+  Protocol_Init();
   MX_GPIO_Init();
+  Protocol_GetNextTxFrame(txBuffer);
+
+
   /* USER CODE BEGIN 2 */
   /* USER CODE END 2 */
   /* Init scheduler */

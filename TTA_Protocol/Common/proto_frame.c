@@ -3,7 +3,14 @@
 // -------------------------------------------------------------
 // Compute CRC (simple XOR of fields)
 // -------------------------------------------------------------
-uint8_t ProtoFrame_ComputeCRC(MessageID_t msgID,
+
+
+/**
+ * @brief Initialize FSM and database.
+
+ We will use this later
+
+ uint8_t ProtoFrame_ComputeCRC(MessageID_t msgID,
                               uint8_t addr,
                               uint8_t length,
                               uint8_t payload)
@@ -15,6 +22,11 @@ uint8_t ProtoFrame_ComputeCRC(MessageID_t msgID,
     crc ^= payload;
     return crc;
 }
+ 
+ */
+
+// -------------------------------------------------------------
+// Frame context (Needed for building frames, if needed)
 
 // -------------------------------------------------------------
 // Build a 7-byte frame
@@ -29,9 +41,11 @@ void ProtoFrame_Build(uint8_t *buffer,
     buffer[1] = (uint8_t)msgID;
     buffer[2] = addr;
     buffer[3] = length;
-    buffer[4] = payload;
+    buffer[4] = payload; 
+    buffer[5] = CRC_dummy;
 
-    buffer[5] = ProtoFrame_ComputeCRC(msgID, addr, length, payload);
+
+   // buffer[5] = ProtoFrame_ComputeCRC(msgID, addr, length, payload);
 
     buffer[6] = FRAME_EOF;
 }

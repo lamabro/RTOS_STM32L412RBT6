@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "proto_defs.h"
+#include "proto_frame.h"
 
 /**
  * @file master_fsm.h
@@ -33,5 +34,8 @@ void MasterFSM_Init(ProtocolState_t *protoState);
 void MasterFSM_OnTimerTick(void);
 void MasterFSM_HandleRxFrame(const uint8_t *frame, uint8_t len);
 void MasterFSM_RequestNextTxFrame(uint8_t *txBuf);
+static void build_discovery_frame(uint8_t *txBuf);
+static void build_presence_check_frame(uint8_t *txBuf);
+static void build_status_request_frame(uint8_t *txBuf);
 
 #endif // MASTER_FSM_H
