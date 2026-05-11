@@ -37,6 +37,9 @@ void ProtoFrame_Build(uint8_t *buffer,
                       uint8_t length,
                       uint8_t payload)
 {
+
+	// let's check frame size before building frame and sets error
+
     buffer[0] = FRAME_SOF;
     buffer[1] = (uint8_t)msgID;
     buffer[2] = addr;

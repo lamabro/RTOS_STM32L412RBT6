@@ -1,0 +1,7 @@
+../TTA_Protocol/Master/master_database.c:13:6:MasterDb_Init	8	static
+../TTA_Protocol/Master/master_database.c:22:12:uniqueID_equal	16	static
+../TTA_Protocol/Master/master_database.c:31:8:MasterDb_FindByUniqueID	24	static
+../TTA_Protocol/Master/master_database.c:48:8:MasterDb_Add	24	static
+../TTA_Protocol/Master/master_database.c:71:9:MasterDb_GetNextFreeAddress	16	static
+../TTA_Protocol/Master/master_database.c:94:6:MasterDb_LoadFromFlash	4	static
+../TTA_Protocol/Master/master_database.c:102:6:MasterDb_SaveToFlash	4	static

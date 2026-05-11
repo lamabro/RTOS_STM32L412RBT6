@@ -30,4 +30,9 @@ Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 \
 Middlewares/Third_Party/FreeRTOS/Source \
 Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
 Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang \
+TTA_Protocol/Common \
+TTA_Protocol/Master \
+TTA_Protocol/Slave \
+TTA_Protocol/Tasks/Master \
+TTA_Protocol/Tasks/Slave \
 

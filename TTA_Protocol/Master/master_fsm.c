@@ -32,7 +32,7 @@ typedef struct
  */
 
 
- define MASTER_ADDRESS 0x01;
+//define MASTER_ADDRESS 0x01
 
 MasterFSM_t g_masterFsm;
 
@@ -54,6 +54,21 @@ void MasterFSM_Init(ProtocolState_t *protoState)
 
    // MasterDb_Init();
 }
+
+
+
+// This is testing function to check build_presence_check_frame separately and setting conditions for that functions
+
+
+void MasterFSM_Init_ACK(ProtocolState_t *protoState)
+{
+    g_masterFsm.state      = MASTER_STATE_PRESENCE_CHECK;
+    g_masterFsm.protoState->addressTable.slaveAddress[g_masterFsm.protoState->addressTable.slaveCount++] = 0xA3;
+
+
+   // MasterDb_Init();
+}
+
 
 /**
  * @brief Called periodically (e.g., every 40 ms).
@@ -114,9 +129,6 @@ if (msgID == MSG_ID_ACK)   // clear meaning
 MASTER_STATE_DISCOVERY,         /**< Searching for slaves */
    
 
-
-Compare:
- */
     MessageID_t msgID = (MessageID_t)frame[1];
     // 
     uint8_t payload   = frame[4];
@@ -197,11 +209,15 @@ static void build_discovery_frame(uint8_t *txBuf)
 
 static void build_presence_check_frame(uint8_t *txBuf)
 {
+
+
+
     if (g_masterFsm.protoState->addressTable.slaveCount == 0)
     {
         build_discovery_frame(txBuf);
         return;
     }
+
 
     uint8_t addr = g_masterFsm.protoState->addressTable.slaveAddress[0];
 

@@ -1,0 +1,4 @@
+../TTA_Protocol/Master/master_task.c:9:6:Protocol_Init	1
+../TTA_Protocol/Master/master_task.c:18:6:Protocol_Init2	1
+../TTA_Protocol/Master/master_task.c:27:6:Protocol_GetNextTxFrame	1
+../TTA_Protocol/Master/master_task.c:34:6:Protocol_HandleRxFrame	1

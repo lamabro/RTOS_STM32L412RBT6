@@ -1,4 +1,4 @@
-#include "protocol_api.h"
+//#include "protocol_api.h"
 #include "master_fsm.h"
 #include "master_scheduler.h"
 #include "proto_frame.h"
@@ -12,6 +12,17 @@ void Protocol_Init(void)
  //   MasterScheduler_Init();
     MasterFSM_Init(&g_protoState);
 }
+
+
+// This is testing function to check build_presence_check_frame from masterfsm.c  separately and setting conditions for that functions
+void Protocol_Init2(void)
+{
+
+
+	MasterFSM_Init_ACK(&g_protoState);
+}
+
+
 
 void Protocol_GetNextTxFrame(uint8_t *txBuffer)
 {

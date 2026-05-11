@@ -1,345 +1,191 @@
-
-
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file           : main.c
-  * @brief          : Main program body - LED Blinking with CMSIS-RTOS v2
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2026 STMicroelectronics.
-  * All rights reserved.
-  * CUBEIDE verified
-  *
+  * @brief          : Main program body - LED Blinking + UART + CMSIS-RTOS v2
   ******************************************************************************
   */
 /* USER CODE END Header */
-/* Includes ------------------------------------------------------------------*/
+
 #include "main.h"
 #include "cmsis_os.h"
+#include "master_task.h"
 
-/* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "string.h"
 /* USER CODE END Includes */
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
-/* USER CODE END PTD */
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
-#define FRAME_SIZE 7
-/* USER CODE END PD */
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-/* USER CODE END PM */
+
 /* Private variables ---------------------------------------------------------*/
-uint8_t txBuffer[FRAME_SIZE]; 
-/* Definitions for defaultTask */
+UART_HandleTypeDef huart2;     // <-- Added UART handle
+uint8_t txBuffer[6];
+uint8_t rxBuffer[6];
+
+/* RTOS thread handles */
 osThreadId_t defaultTaskHandle;
-const osThreadAttr_t defaultTask_attributes = {
-  .name = "defaultTask",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
-};
-/* Definitions for Task1 */
 osThreadId_t Task1Handle;
-const osThreadAttr_t Task1_attributes = {
-  .name = "Task1",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
-};
-/* Definitions for Task2 */
 osThreadId_t Task2Handle;
-const osThreadAttr_t Task2_attributes = {
-  .name = "Task2",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityBelowNormal,
-};
-/* USER CODE BEGIN PV */
-/* USER CODE END PV */
-/* Private function prototypes -----------------------------------------------*/
+
+/* Function prototypes */
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_USART2_UART_Init(void);   // <-- Added
 void StartDefaultTask(void *argument);
 void StartTask1(void *argument);
 void StartTask2(void *argument);
-/* USER CODE BEGIN PFP */
-/* USER CODE END PFP */
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-/* USER CODE END 0 */
-/**
-  * @brief  The application entry point.
-  * @retval int
-  */
+
+/* MAIN FUNCTION */
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
-  /* USER CODE END 1 */
-  /* MCU Configuration--------------------------------------------------------*/
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
-  /* USER CODE BEGIN Init */
-  /* USER CODE END Init */
-  /* Configure the system clock */
+   HAL_Init();
   SystemClock_Config();
-  /* USER CODE BEGIN SysInit */
-  /* USER CODE END SysInit */
-  /* Initialize all configured peripherals */
-  
+
   Protocol_Init();
   MX_GPIO_Init();
+  MX_USART2_UART_Init();   // <-- Added
+
   Protocol_GetNextTxFrame(txBuffer);
+  //HAL_Delay(100);  // Short delay to ensure everything is initialized
 
 
-  /* USER CODE BEGIN 2 */
-  /* USER CODE END 2 */
-  /* Init scheduler */
+  Protocol_Init2();
+  Protocol_GetNextTxFrame(txBuffer);
+   //HAL_Delay(10);
+
+
+
+
+
+  /* Test UART message before RTOS starts */
+  //char msg[] = "STM32L412 UART2 via ST-LINK VCP OK!\r\n";
+
+  /* RTOS Init */
   osKernelInitialize();
-  /* USER CODE BEGIN RTOS_MUTEX */
-  /* add mutexes, ... */
-  /* USER CODE END RTOS_MUTEX */
-  /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
-  /* USER CODE END RTOS_SEMAPHORES */
-  /* USER CODE BEGIN RTOS_TIMERS */
-  /* start timers, add new ones, ... */
-  /* USER CODE END RTOS_TIMERS */
-  /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
-  /* USER CODE END RTOS_QUEUES */
-  /* Create the thread(s) */
-  /* creation of defaultTask */
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
-  /* creation of Task1 */
-  Task1Handle = osThreadNew(StartTask1, NULL, &Task1_attributes);
-  /* creation of Task2 */
-  Task2Handle = osThreadNew(StartTask2, NULL, &Task2_attributes);
-  /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
-  /* USER CODE END RTOS_THREADS */
-  /* USER CODE BEGIN RTOS_EVENTS */
-  /* add events, ... */
-  /* USER CODE END RTOS_EVENTS */
-  /* Start scheduler */
+
+  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, NULL);
+  Task1Handle = osThreadNew(StartTask1, NULL, NULL);
+  Task2Handle = osThreadNew(StartTask2, NULL, NULL);
+
   osKernelStart();
-  /* We should never get here as control is now taken by the scheduler */
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+
   while (1)
   {
-    /* USER CODE END WHILE */
-    /* USER CODE BEGIN 3 */
   }
-  /* USER CODE END 3 */
 }
-/**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+
+/* CLOCK CONFIG -------------------------------------------------------------*/
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-  /** Configure the main internal regulator output voltage
-  */
-  if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
+
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
   RCC_OscInitStruct.MSIState = RCC_MSI_ON;
   RCC_OscInitStruct.MSICalibrationValue = 0;
   RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  HAL_RCC_OscConfig(&RCC_OscInitStruct);
+
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK |
+                                RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_MSI;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
-  {
-    Error_Handler();
-  }
+  HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0);
 }
-/**
-  * @brief GPIO Initialization Function
-  * @param None
-  * @retval None
-  */
+
+/* GPIO INIT ---------------------------------------------------------------*/
 static void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-  /* USER CODE BEGIN MX_GPIO_Init_1 */
-  /* USER CODE END MX_GPIO_Init_1 */
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
+
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(PW_24V_GPIO_Port, PW_24V_Pin, GPIO_PIN_RESET);
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, Close_End_Pin|Open_Led_Pin, GPIO_PIN_RESET);
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(KCE_DE_GPIO_Port, KCE_DE_Pin, GPIO_PIN_RESET);
-  /*Configure GPIO pin : Push_Button_Pin */
-  GPIO_InitStruct.Pin = Push_Button_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+
+  /* PA5 LED */
+  GPIO_InitStruct.Pin = GPIO_PIN_5;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(Push_Button_GPIO_Port, &GPIO_InitStruct);
-  /*Configure GPIO pins : KCE_RS485_TX_Pin KCE_RS485_RX_Pin */
-  GPIO_InitStruct.Pin = KCE_RS485_TX_Pin|KCE_RS485_RX_Pin;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /* USART2 PA2 (TX), PA3 (RX) */
+  GPIO_InitStruct.Pin = GPIO_PIN_2 | GPIO_PIN_3;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-  /*Configure GPIO pin : PW_24V_Pin */
-  GPIO_InitStruct.Pin = PW_24V_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(PW_24V_GPIO_Port, &GPIO_InitStruct);
-  /*Configure GPIO pins : Close_End_Pin Open_Led_Pin */
-  GPIO_InitStruct.Pin = Close_End_Pin|Open_Led_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-  /*Configure GPIO pin : KCE_DE_Pin */
-  GPIO_InitStruct.Pin = KCE_DE_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  HAL_GPIO_Init(KCE_DE_GPIO_Port, &GPIO_InitStruct);
-  /*Configure GPIO pins : RS232_TX_Pin RS232_RX_Pin */
-  GPIO_InitStruct.Pin = RS232_TX_Pin|RS232_RX_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-  /* USER CODE BEGIN MX_GPIO_Init_2 */
-  /* USER CODE END MX_GPIO_Init_2 */
 }
-/* USER CODE BEGIN 4 */
-// Helper function to get button state (optional, for Task4)
-uint8_t IsButtonPressed(void)
+
+/* USART2 INIT -------------------------------------------------------------*/
+static void MX_USART2_UART_Init(void)
 {
-  return (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET);
+  __HAL_RCC_USART2_CLK_ENABLE();
+
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
 }
-/* USER CODE END 4 */
-/* USER CODE BEGIN Header_StartDefaultTask */
-/**
-  * @brief  Function implementing the defaultTask thread.
-  * @param  argument: Not used
-  * @retval None
-  */
-/* USER CODE END Header_StartDefaultTask */
+
+/* DEFAULT TASK ------------------------------------------------------------*/
 void StartDefaultTask(void *argument)
 {
-  /* USER CODE BEGIN 5 */
-  /* Infinite loop */
+  char msg[] = "DefaultTask running...\r\n";
+
+
+
   for(;;)
   {
-    /* Red LED toggles every 1000ms (1 second) */
-    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_3);  // Red LED
-    osDelay(1000);  // RTOS delay - non-blocking
-  }
-  /* USER CODE END 5 */
-}
-/* USER CODE BEGIN Header_StartTask1 */
-/**
-* @brief Function implementing the Task1 thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartTask1 */
-void StartTask1(void *argument)
-{
-  /* USER CODE BEGIN StartTask1 */
-  /* Infinite loop */
-  for(;;)
-  {
-    HAL_GPIO_TogglePin(GPIOC, Close_End_Pin);  // Green LED
+    //HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
+	  HAL_UART_Receive(&huart2, rxBuffer, FRAME_SIZE, HAL_MAX_DELAY);
+    //HAL_Delay(100);
+
     osDelay(1000);
   }
-  /* USER CODE END StartTask1 */
 }
-/* USER CODE BEGIN Header_StartTask2 */
-/**
-* @brief Function implementing the Task2 thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_StartTask2 */
-void StartTask2(void *argument)
+
+/* TASK1 -------------------------------------------------------------------*/
+void StartTask1(void *argument)
 {
-  /* USER CODE BEGIN StartTask2 */
-  /* Infinite loop */
   for(;;)
   {
-    HAL_GPIO_TogglePin(GPIOC, Open_Led_Pin);  // Blue LED
-    osDelay(200);
+	 // HAL_UART_Transmit(&huart2, txBuffer, FRAME_SIZE, HAL_MAX_DELAY);
+   // HAL_Delay(1000);
+	  HAL_UART_Receive(&huart2, rxBuffer, FRAME_SIZE, HAL_MAX_DELAY);
+    osDelay(1000);
+	  /* Blink once before RTOS */
+
+
   }
-  /* USER CODE END StartTask2 */
 }
-/**
-  * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM6 interrupt took place, inside
-  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
-  * a global variable "uwTick" used as application time base.
-  * @param  htim : TIM handle
-  * @retval None
-  */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+
+/* TASK2 -------------------------------------------------------------------*/
+void StartTask2(void *argument)
 {
-  /* USER CODE BEGIN Callback 0 */
-  /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM6)
+	  char msg[] = "Task2 running...\r\n";
+  for(;;)
   {
-    HAL_IncTick();
+   // HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
+    HAL_GPIO_TogglePin(GPIOC, Open_Led_Pin);
+    osDelay(1000);
   }
-  /* USER CODE BEGIN Callback 1 */
-  /* USER CODE END Callback 1 */
 }
-/**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+
+/* ERROR HANDLER -----------------------------------------------------------*/
 void Error_Handler(void)
 {
-  /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
-  while (1)
-  {
-  }
-  /* USER CODE END Error_Handler_Debug */
+  while (1) {}
 }
-#ifdef USE_FULL_ASSERT
-/**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
-void assert_failed(uint8_t *file, uint32_t line)
-{
-  /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
-}
-#endif /* USE_FULL_ASSERT */

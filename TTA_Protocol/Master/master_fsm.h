@@ -31,6 +31,7 @@ extern MasterFSM_t g_masterFsm;
 
 /* API */
 void MasterFSM_Init(ProtocolState_t *protoState);
+void MasterFSM_Init_ACK(ProtocolState_t *protoState);
 void MasterFSM_OnTimerTick(void);
 void MasterFSM_HandleRxFrame(const uint8_t *frame, uint8_t len);
 void MasterFSM_RequestNextTxFrame(uint8_t *txBuf);
