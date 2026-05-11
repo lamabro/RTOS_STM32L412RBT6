@@ -16,9 +16,9 @@
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-UART_HandleTypeDef huart2;     // <-- Added UART handle
-uint8_t txBuffer[6];
-uint8_t rxBuffer[6];
+UART_HandleTypeDef huart1;     // <-- Added UART handle
+uint8_t txBuffer[7];
+uint8_t rxBuffer[7];
 
 /* RTOS thread handles */
 osThreadId_t defaultTaskHandle;
@@ -28,7 +28,7 @@ osThreadId_t Task2Handle;
 /* Function prototypes */
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_USART2_UART_Init(void);   // <-- Added
+static void MX_USART1_UART_Init(void);   // <-- Added
 void StartDefaultTask(void *argument);
 void StartTask1(void *argument);
 void StartTask2(void *argument);
@@ -36,12 +36,12 @@ void StartTask2(void *argument);
 /* MAIN FUNCTION */
 int main(void)
 {
-   HAL_Init();
+  HAL_Init();
   SystemClock_Config();
 
   Protocol_Init();
   MX_GPIO_Init();
-  MX_USART2_UART_Init();   // <-- Added
+  MX_USART1_UART_Init();   // <-- Added
 
   Protocol_GetNextTxFrame(txBuffer);
   //HAL_Delay(100);  // Short delay to ensure everything is initialized
@@ -53,17 +53,18 @@ int main(void)
 
 
 
-
-
   /* Test UART message before RTOS starts */
   //char msg[] = "STM32L412 UART2 via ST-LINK VCP OK!\r\n";
 
   /* RTOS Init */
+
+
   osKernelInitialize();
 
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, NULL);
   Task1Handle = osThreadNew(StartTask1, NULL, NULL);
   Task2Handle = osThreadNew(StartTask2, NULL, NULL);
+
 
   osKernelStart();
 
@@ -111,29 +112,29 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USART2 PA2 (TX), PA3 (RX) */
-  GPIO_InitStruct.Pin = GPIO_PIN_2 | GPIO_PIN_3;
+  GPIO_InitStruct.Pin = GPIO_PIN_6 | GPIO_PIN_7;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 }
 
 /* USART2 INIT -------------------------------------------------------------*/
-static void MX_USART2_UART_Init(void)
+static void MX_USART1_UART_Init(void)
 {
-  __HAL_RCC_USART2_CLK_ENABLE();
+  __HAL_RCC_USART1_CLK_ENABLE();
 
-  huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
-  huart2.Init.WordLength = UART_WORDLENGTH_8B;
-  huart2.Init.StopBits = UART_STOPBITS_1;
-  huart2.Init.Parity = UART_PARITY_NONE;
-  huart2.Init.Mode = UART_MODE_TX_RX;
-  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
 
-  if (HAL_UART_Init(&huart2) != HAL_OK)
+  if (HAL_UART_Init(&huart1) != HAL_OK)
   {
     Error_Handler();
   }
@@ -142,17 +143,14 @@ static void MX_USART2_UART_Init(void)
 /* DEFAULT TASK ------------------------------------------------------------*/
 void StartDefaultTask(void *argument)
 {
-  char msg[] = "DefaultTask running...\r\n";
-
-
 
   for(;;)
   {
-    //HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
-	  HAL_UART_Receive(&huart2, rxBuffer, FRAME_SIZE, HAL_MAX_DELAY);
-    //HAL_Delay(100);
+    
+	  HAL_UART_Receive(&huart1, rxBuffer, FRAME_SIZE, HAL_MAX_DELAY);
+    HAL_Delay(100);
 
-    osDelay(1000);
+    osDelay(10);
   }
 }
 
@@ -163,7 +161,7 @@ void StartTask1(void *argument)
   {
 	 // HAL_UART_Transmit(&huart2, txBuffer, FRAME_SIZE, HAL_MAX_DELAY);
    // HAL_Delay(1000);
-	  HAL_UART_Receive(&huart2, rxBuffer, FRAME_SIZE, HAL_MAX_DELAY);
+   HAL_UART_Transmit(&huart1, rxBuffer, FRAME_SIZE, HAL_MAX_DELAY);
     osDelay(1000);
 	  /* Blink once before RTOS */
 
@@ -174,7 +172,7 @@ void StartTask1(void *argument)
 /* TASK2 -------------------------------------------------------------------*/
 void StartTask2(void *argument)
 {
-	  char msg[] = "Task2 running...\r\n";
+	  //char msg[] = "Task2 running...\r\n";
   for(;;)
   {
    // HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
