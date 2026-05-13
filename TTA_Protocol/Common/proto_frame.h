@@ -10,7 +10,7 @@
 // -------------------------------------------------------------
 #define FRAME_SOF       0xAA
 #define FRAME_EOF       0x55
-#define FRAME_SIZE      6      // Fixed-length frame
+#define FRAME_SIZE      7      // Fixed-length frame
 #define CRC_dummy       0xA1
 // -------------------------------------------------------------
 // Frame structure (logical representation)

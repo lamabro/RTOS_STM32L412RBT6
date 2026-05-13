@@ -36,6 +36,8 @@ typedef struct
 
 MasterFSM_t g_masterFsm;
 
+
+
 /* Internal helpers */
 // GOT Error and removed unused functions to reduce code size and complexity
 
@@ -114,11 +116,11 @@ void MasterFSM_HandleRxFrame(const uint8_t *frame, uint8_t len)
 
     if (frame[0] != FRAME_SOF || frame[6] != FRAME_EOF)
         return;
-
+// This is
         // Extract message ID and payload
 
         /**
- * @brief Build next TX frame based on FSM state.
+ *  Build next TX frame based on FSM state.
 
  ou are telling the compiler:
 
@@ -136,18 +138,71 @@ MASTER_STATE_DISCOVERY,         /**< Searching for slaves */
     switch (msgID)
     {
         case MSG_ID_ACK:
-            g_masterFsm.protoState->statusByte.bits.commRunning = 1;
-            g_masterFsm.state = MASTER_STATE_NORMAL_OPERATION;
 
-            break;
+        
+
+// Check if slave is already known 
+uint8_t exists = 0;
+
+    for (int i = 0; i < g_masterFsm.protoState->addressTable.slaveCount; i++) {
+        if (g_masterFsm.protoState->addressTable.slaveAddress[i] == payload) {
+            exists = 1;
+            break;   // exits ONLY the for-loop
+        }
+    }
+// if slave is already known, just move to next state
+
+    // This is yet to be configured correctly.
+
+    if (exists) {
+        // Slave already known → exit switch case immediately
+        g_masterFsm.protoState->statusByte.bits.commRunning = 1;
+        g_masterFsm.state = MASTER_STATE_NORMAL_OPERATION;
+        break;   // exits the SWITCH case
+    }
+
+    // Else state is changed to Master State discovery for new slave addr
+    g_masterFsm.protoState->statusByte.bits.commRunning = 1;
+    g_masterFsm.state = MASTER_STATE_DISCOVERY;
+
+    break;
+
+
+
+            
+
+
 
         case MSG_ID_DISCOVER:
-            g_masterFsm.protoState->statusByte.bits.commRunning = 1;
-            g_masterFsm.state =  MASTER_STATE_PRESENCE_CHECK,    /**< Confirming discovered slaves */
-            g_masterFsm.protoState->addressTable.slaveAddress[g_masterFsm.protoState->addressTable.slaveCount++] = frame[2]
+// This would process the discovery message and add new slave to the address table if not already present
+//uint8_t exists = 0;
+// Chesk if slave is already known
+    for (int i = 0; i < g_masterFsm.protoState->addressTable.slaveCount; i++) {
+        if (g_masterFsm.protoState->addressTable.slaveAddress[i] == payload) {
+            exists = 1;
+            break;   // exits ONLY the for-loop
+        }
+    }
 
-;
-            break;
+    if (exists) {
+        // Slave already known → exit switch case immediately for next State confirmation
+        g_masterFsm.protoState->statusByte.bits.commRunning = 1;
+        g_masterFsm.state = MASTER_STATE_PRESENCE_CHECK;
+        break;   // exits the SWITCH case
+    }
+
+    // Slave is NEW → add it
+    g_masterFsm.protoState->addressTable.slaveAddress[
+        g_masterFsm.protoState->addressTable.slaveCount++
+    ] = payload;   // New address added to table of slaves
+
+    g_masterFsm.protoState->statusByte.bits.commRunning = 1;
+    g_masterFsm.state = MASTER_STATE_PRESENCE_CHECK;
+
+    break;
+
+
+    
 
         case MSG_ID_STATUS_REQ:
             g_masterFsm.protoState->statusByte.bits.commRunning = 1;
@@ -205,6 +260,7 @@ static void build_discovery_frame(uint8_t *txBuf)
                      MASTER_ADDRESS,
                      0x00,
                      0x00);
+    //  Pay lOAD ix 00
 }
 
 static void build_presence_check_frame(uint8_t *txBuf)
@@ -225,7 +281,7 @@ static void build_presence_check_frame(uint8_t *txBuf)
                      MSG_ID_ACK,
                      addr,
                      0x01,
-                     0xC0);
+                     0xB0);
 }
 
 static void build_status_request_frame(uint8_t *txBuf)
@@ -242,5 +298,5 @@ static void build_status_request_frame(uint8_t *txBuf)
                      MSG_ID_STATUS_REQ,
                      addr,
                      0x01,
-                     0x01);
+                     0xC0);
 }

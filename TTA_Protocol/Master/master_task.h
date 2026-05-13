@@ -3,6 +3,7 @@
 #include "master_fsm.h"
 #include "master_scheduler.h"
 #include "proto_frame.h"
+#include <string.h>
 
 
 static ProtocolState_t g_protoState;
