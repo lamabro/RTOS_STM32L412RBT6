@@ -1,111 +1,172 @@
+
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file           : main.c
-  * @brief          : UART Interrupt + FreeRTOS Task Sync Example
+  * @brief          : UART Interrupt + CMSIS-RTOS v2 Queue Example
   ******************************************************************************
   */
 /* USER CODE END Header */
 
 #include "main.h"
 #include "cmsis_os.h"
-#include "master_task.h"
 #include "string.h"
+#include "master_task.h"
 
 /* UART + Buffers ------------------------------------------------------------*/
 UART_HandleTypeDef huart2;
 
-#define RX_BUFFER_SIZE 7
-#define TX_BUFFER_SIZE 7
+#define FRAME_SIZE    7
+#define QUEUE_LENGTH  10   // can store 10 frames of 7 bytes each
 
-uint8_t rxBuffer[RX_BUFFER_SIZE];
-uint8_t txBuffer[TX_BUFFER_SIZE];
-
+/* RX buffer used ONLY by ISR */
 /* RTOS Handles --------------------------------------------------------------*/
+static uint8_t rxBuffer[FRAME_SIZE];
 osThreadId_t uartTaskHandle;
-osSemaphoreId_t uartRxSemaphore;
+osThreadId_t sendframeHandle;
+osMessageQueueId_t uartRxQueue;
 
 /* Function Prototypes -------------------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 void StartUartTask(void *argument);
+void StartSendFrameTask(void *argument);
+
+void Error_Handler(void);
 
 /* MAIN ----------------------------------------------------------------------*/
 int main(void)
 {
+    /* HAL Init */
     HAL_Init();
     SystemClock_Config();
     MX_GPIO_Init();
     MX_USART2_UART_Init();
-    HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
-    HAL_NVIC_SetPriority(USART2_IRQn, 5, 0);
-    HAL_NVIC_EnableIRQ(USART2_IRQn);
 
+    /* Protocol init (your existing code) */
     Protocol_Init();
-    Protocol_GetNextTxFrame(txBuffer);
 
-    /* Create semaphore */
-    const osSemaphoreAttr_t uartSemAttr = { .name = "uartRxSem" };
-    uartRxSemaphore = osSemaphoreNew(1, 0, &uartSemAttr);
+    /* Create RX queue: 10 frames, each 7 bytes (CMSIS-RTOS v2) */
+    uartRxQueue = osMessageQueueNew(QUEUE_LENGTH, FRAME_SIZE, NULL);
+    if (uartRxQueue == NULL)
+    {
+        Error_Handler();
+    }
 
-    /* Start UART interrupt reception */
-    HAL_UART_Receive_IT(&huart2, rxBuffer, RX_BUFFER_SIZE);
+    /* Start UART interrupt reception into rxBuffer */
+    HAL_UART_Receive_IT(&huart2, rxBuffer, FRAME_SIZE);
 
-    /* RTOS Init */
+    /* Initialize CMSIS-RTOS kernel */
     osKernelInitialize();
-    uartTaskHandle = osThreadNew(StartUartTask, NULL, NULL);
+
+    /* Create UART task */
+    const osThreadAttr_t uartTaskAttr = {
+        .name = "uartTask",
+        .priority = osPriorityNormal,
+        .stack_size = 1024
+    };
+
+    /* Create SendFrame task */
+    const osThreadAttr_t sendframeAttr = {
+        .name = "sendframeTask",
+        .priority = osPriorityBelowNormal,  // Lower priority than uartTask
+        .stack_size = 1024
+    };
+
+    uartTaskHandle = osThreadNew(StartUartTask, NULL, &uartTaskAttr);
+    sendframeHandle = osThreadNew(StartSendFrameTask, NULL, &sendframeAttr);
+
+    if (uartTaskHandle == NULL || sendframeHandle == NULL)
+    {
+        Error_Handler();
+    }
+
+    /* Start scheduler (does not return under normal operation) */
     osKernelStart();
 
+    /* Should never get here */
     while (1) {}
 }
 
 /* UART RX COMPLETE CALLBACK -------------------------------------------------*/
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-    uint8_t msg[] = "From Slave";
-    HAL_UART_Transmit(&huart2, msg, sizeof(msg)-1, 5);
 
-        HAL_UART_Transmit(&huart2, rxBuffer, sizeof(rxBuffer)-1, 5);
+{
+
 
 
     if (huart->Instance == USART2)
     {
-        osSemaphoreRelease(uartRxSemaphore);   // Wake task
-        HAL_UART_Receive_IT(&huart2, rxBuffer, RX_BUFFER_SIZE); // Re-arm
+        /* Push a COPY of the received frame into the queue (from ISR) */
+        osMessageQueuePut(uartRxQueue, rxBuffer, 0, 0);
+
+        /* Re-arm UART for next frame */
+        HAL_UART_Receive_IT(&huart2, rxBuffer, FRAME_SIZE);
     }
 }
 
 /* UART TASK -----------------------------------------------------------------*/
 void StartUartTask(void *argument)
 {
-    for(;;)
+    uint8_t frame[FRAME_SIZE];
+    uint8_t txBuffer[FRAME_SIZE];
+
+    char startMsg[] = "[UART TASK] Started\r\n";
+    HAL_UART_Transmit(&huart2, (uint8_t*)startMsg, strlen(startMsg), 100);
+
+    for (;;)
     {
-        /* Wait until ISR signals data received */
-        if (osSemaphoreAcquire(uartRxSemaphore, osWaitForever) == osOK)
-
-
-
+        /* Wait for next frame from queue (FIFO, blocking) */
+        if (osMessageQueueGet(uartRxQueue, frame, NULL, osWaitForever) == osOK)
         {
+            /* Process received frame (safe copy) */
+            Protocol_HandleRxFrame(frame, FRAME_SIZE);
 
-        	 uint8_t msg[] = "INSIDE TASK";
-        	    HAL_UART_Transmit(&huart2, msg, sizeof(msg)-1, 5);
+            char dbg[] = "[UART TASK] Frame received and processed\r\n";
+            HAL_UART_Transmit(&huart2, (uint8_t*)dbg, strlen(dbg), 10);
 
-        	        HAL_UART_Transmit(&huart2, rxBuffer, sizeof(rxBuffer)-1, 5);
+            /* Prepare next TX frame (if needed) */
+            // Protocol_GetNextTxFrame(txBuffer);
 
+            /* Transmit response (if needed) */
+            // HAL_UART_Transmit(&huart2, txBuffer, FRAME_SIZE, 10);
+        }
 
-            /* Process received frame */
-            Protocol_HandleRxFrame(rxBuffer, RX_BUFFER_SIZE);
-            osDelay(3);
-
-            /* Prepare next TX frame */
-            Protocol_GetNextTxFrame(txBuffer);
-            osDelay(3);
-
-            /* Transmit response */
-            HAL_UART_Transmit(&huart2, txBuffer, TX_BUFFER_SIZE, 100);
+        else
+        {
+            /* Timeout occurred - queue empty for 1 second */
+            char err[] = "[UART TASK] Queue timeout!\r\n";
+            HAL_UART_Transmit(&huart2, (uint8_t*)err, strlen(err), 10);
         }
     }
+}
+
+/* SEND FRAME TASK -----------------------------------------------------------*/
+void StartSendFrameTask(void *argument)
+{
+    uint8_t txBuffer[FRAME_SIZE];
+
+    char dbgStart[] = "[TX TASK] Started periodic TX every 2s\r\n";
+    HAL_UART_Transmit(&huart2, (uint8_t*)dbgStart, strlen(dbgStart), 10);
+
+    for (;;)
+    {
+        /* Protocol_GetNextTxFrame decides what to send based on FSM state */
+        Protocol_GetNextTxFrame(txBuffer);
+        HAL_UART_Transmit(&huart2, rxBuffer, FRAME_SIZE, 10);
+
+        char dbg[] = "[TX TASK] TX frame sent\r\n";
+        HAL_UART_Transmit(&huart2, (uint8_t*)dbg, strlen(dbg), 10);
+
+        osDelay(pdMS_TO_TICKS(2000));  // CMSIS-RTOS v2 delay
+    }
+}
+
+/* USART2 IRQ HANDLER --------------------------------------------------------*/
+void USART2_IRQHandler(void)
+{
+    HAL_UART_IRQHandler(&huart2);
 }
 
 /* GPIO INIT -----------------------------------------------------------------*/
@@ -138,15 +199,15 @@ static void MX_USART2_UART_Init(void)
     huart2.Init.OverSampling = UART_OVERSAMPLING_16;
 
     if (HAL_UART_Init(&huart2) != HAL_OK)
+    {
         Error_Handler();
-}
+    }
 
-void USART2_IRQHandler(void)
-{
-    /* Base interrupt handling */
-    HAL_UART_IRQHandler(&huart2);
+    /* NVIC config for USART2 - Ensure priority is within FreeRTOS limits */
+    HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
+    HAL_NVIC_SetPriority(USART2_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(USART2_IRQn);
 }
-
 
 /* CLOCK CONFIG --------------------------------------------------------------*/
 void SystemClock_Config(void)
