@@ -1,6 +1,0 @@
-# ninja log v5
-2	70	1779632631231949977	tests/CMakeFiles/test_master_fsm.dir/__/TTA_Protocol/Master/master_fsm.c.o	1fcf956d830d3971
-2	73	1779632631233035051	tests/CMakeFiles/test_master_fsm.dir/__/TTA_Protocol/Common/proto_frame.c.o	81473d9841821f93
-2	100	1779632631263217154	tests/CMakeFiles/test_master_fsm.dir/test_master_fsm.c.o	235014ffc2ce8d4b
-2	166	1779632631328995355	tests/CMakeFiles/test_master_fsm.dir/unity/src/unity.c.o	fec16783de54b82a
-166	183	1779632631346009452	tests/test_master_fsm	22144c657af16de5
