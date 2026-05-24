@@ -203,7 +203,7 @@ build CMakeFiles/docs | ${cmake_ninja_workdir}CMakeFiles/docs: CUSTOM_COMMAND
 # Custom command for CMakeFiles/complexity
 
 build CMakeFiles/complexity | ${cmake_ninja_workdir}CMakeFiles/complexity: CUSTOM_COMMAND
-  COMMAND = cd /RTOSP1 && /usr/bin/cmake -E make_directory /RTOSP1/build/documentation/report && /home/builder/.suresh/bin/lizard Core/Src/main.c -l c -w --thresholds nloc=50,ccn=15 -o /RTOSP1/build/documentation/report/complexity_report.log && python3 /RTOSP1/scripts/generate_cc_report.py
+  COMMAND = cd /RTOSP1 && /usr/bin/cmake -E make_directory /RTOSP1/build/documentation/report && /home/builder/.suresh/bin/lizard Core/Src/main.c -l c -w -o /RTOSP1/build/documentation/report/complexity_report.log
   DESC = Generating code complexity analysis with Lizard...
 
 

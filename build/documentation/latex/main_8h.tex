@@ -1,0 +1,98 @@
+\hypertarget{main_8h}{}\doxysection{Core/\+Inc/main.h File Reference}
+\label{main_8h}\index{Core/Inc/main.h@{Core/Inc/main.h}}
+
+
+\+: Header for \mbox{\hyperlink{main_8c}{main.\+c}} file. This file contains the common defines of the application.  
+
+
+{\ttfamily \#include \char`\"{}stm32l4xx\+\_\+hal.\+h\char`\"{}}\newline
+Include dependency graph for main.\+h\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=178pt]{main_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=173pt]{main_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{main_8h_ae0d4ec72338f3c34b798d0d4c73ba032}\label{main_8h_ae0d4ec72338f3c34b798d0d4c73ba032}} 
+\#define {\bfseries Push\+\_\+\+Button\+\_\+\+Pin}~GPIO\+\_\+\+PIN\+\_\+1
+\item 
+\mbox{\Hypertarget{main_8h_a39d79898cdeb002d0ca95da8c1b4586a}\label{main_8h_a39d79898cdeb002d0ca95da8c1b4586a}} 
+\#define {\bfseries Push\+\_\+\+Button\+\_\+\+GPIO\+\_\+\+Port}~GPIOC
+\item 
+\mbox{\Hypertarget{main_8h_a374be8ba9f8fa9dcd5e6c04a097a195b}\label{main_8h_a374be8ba9f8fa9dcd5e6c04a097a195b}} 
+\#define {\bfseries KCE\+\_\+\+RS485\+\_\+\+TX\+\_\+\+Pin}~GPIO\+\_\+\+PIN\+\_\+2
+\item 
+\mbox{\Hypertarget{main_8h_a032d31911817194d394d874ad332741f}\label{main_8h_a032d31911817194d394d874ad332741f}} 
+\#define {\bfseries KCE\+\_\+\+RS485\+\_\+\+TX\+\_\+\+GPIO\+\_\+\+Port}~GPIOA
+\item 
+\mbox{\Hypertarget{main_8h_a3ad973fc7039ff190b9db859a4ed2419}\label{main_8h_a3ad973fc7039ff190b9db859a4ed2419}} 
+\#define {\bfseries KCE\+\_\+\+RS485\+\_\+\+RX\+\_\+\+Pin}~GPIO\+\_\+\+PIN\+\_\+3
+\item 
+\mbox{\Hypertarget{main_8h_ab2fdbe466d328a34ca87299a0fa69c24}\label{main_8h_ab2fdbe466d328a34ca87299a0fa69c24}} 
+\#define {\bfseries KCE\+\_\+\+RS485\+\_\+\+RX\+\_\+\+GPIO\+\_\+\+Port}~GPIOA
+\item 
+\mbox{\Hypertarget{main_8h_a9039e20030ea0921acb579afb1cd867a}\label{main_8h_a9039e20030ea0921acb579afb1cd867a}} 
+\#define {\bfseries PW\+\_\+24\+V\+\_\+\+Pin}~GPIO\+\_\+\+PIN\+\_\+0
+\item 
+\mbox{\Hypertarget{main_8h_a2d344b68bff5defa626334155239c75b}\label{main_8h_a2d344b68bff5defa626334155239c75b}} 
+\#define {\bfseries PW\+\_\+24\+V\+\_\+\+GPIO\+\_\+\+Port}~GPIOB
+\item 
+\mbox{\Hypertarget{main_8h_aa846a358871f6c82f4b1c5c5d139def8}\label{main_8h_aa846a358871f6c82f4b1c5c5d139def8}} 
+\#define {\bfseries Close\+\_\+\+End\+\_\+\+Pin}~GPIO\+\_\+\+PIN\+\_\+6
+\item 
+\mbox{\Hypertarget{main_8h_a4ad39d73212cbf05b91cec46c24405e7}\label{main_8h_a4ad39d73212cbf05b91cec46c24405e7}} 
+\#define {\bfseries Close\+\_\+\+End\+\_\+\+GPIO\+\_\+\+Port}~GPIOC
+\item 
+\mbox{\Hypertarget{main_8h_a5da94398d3374f506e4a2159ac8019e4}\label{main_8h_a5da94398d3374f506e4a2159ac8019e4}} 
+\#define {\bfseries Open\+\_\+\+Led\+\_\+\+Pin}~GPIO\+\_\+\+PIN\+\_\+7
+\item 
+\mbox{\Hypertarget{main_8h_a917ed52d8daa9e49e47699676e685f1e}\label{main_8h_a917ed52d8daa9e49e47699676e685f1e}} 
+\#define {\bfseries Open\+\_\+\+Led\+\_\+\+GPIO\+\_\+\+Port}~GPIOC
+\item 
+\mbox{\Hypertarget{main_8h_a91972662f9d1757ccd3f5c299052f87f}\label{main_8h_a91972662f9d1757ccd3f5c299052f87f}} 
+\#define {\bfseries KCE\+\_\+\+DE\+\_\+\+Pin}~GPIO\+\_\+\+PIN\+\_\+11
+\item 
+\mbox{\Hypertarget{main_8h_a07c8b438948408f78059e8d8d47a8daa}\label{main_8h_a07c8b438948408f78059e8d8d47a8daa}} 
+\#define {\bfseries KCE\+\_\+\+DE\+\_\+\+GPIO\+\_\+\+Port}~GPIOA
+\item 
+\mbox{\Hypertarget{main_8h_abfb5fe8738e6b19b5479da60668372dd}\label{main_8h_abfb5fe8738e6b19b5479da60668372dd}} 
+\#define {\bfseries RS232\+\_\+\+TX\+\_\+\+Pin}~GPIO\+\_\+\+PIN\+\_\+6
+\item 
+\mbox{\Hypertarget{main_8h_a52156f353d041e6ea7d8a0ba9afb4ddd}\label{main_8h_a52156f353d041e6ea7d8a0ba9afb4ddd}} 
+\#define {\bfseries RS232\+\_\+\+TX\+\_\+\+GPIO\+\_\+\+Port}~GPIOB
+\item 
+\mbox{\Hypertarget{main_8h_a047e1624760aa8b1025e7f151fd27b8b}\label{main_8h_a047e1624760aa8b1025e7f151fd27b8b}} 
+\#define {\bfseries RS232\+\_\+\+RX\+\_\+\+Pin}~GPIO\+\_\+\+PIN\+\_\+7
+\item 
+\mbox{\Hypertarget{main_8h_a3244f8f343a755a3d384a7b1aa493b7a}\label{main_8h_a3244f8f343a755a3d384a7b1aa493b7a}} 
+\#define {\bfseries RS232\+\_\+\+RX\+\_\+\+GPIO\+\_\+\+Port}~GPIOB
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{main_8h_a1730ffe1e560465665eb47d9264826f9}\label{main_8h_a1730ffe1e560465665eb47d9264826f9}} 
+void {\bfseries Error\+\_\+\+Handler} (void)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\+: Header for \mbox{\hyperlink{main_8c}{main.\+c}} file. This file contains the common defines of the application. 
+
+\begin{DoxyAttention}{Attention}
+
+\end{DoxyAttention}
+Copyright (c) 2026 STMicroelectronics. All rights reserved.
+
+This software is licensed under terms that can be found in the LICENSE file in the root directory of this software component. If no LICENSE file comes with this software, it is provided AS-\/\+IS. 

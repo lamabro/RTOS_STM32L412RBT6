@@ -1,0 +1,140 @@
+\hypertarget{main_8c}{}\doxysection{Core/\+Src/main.c File Reference}
+\label{main_8c}\index{Core/Src/main.c@{Core/Src/main.c}}
+
+
+\+: UART Interrupt RX/\+TX with CMSIS-\/\+RTOS V2  
+
+
+{\ttfamily \#include \char`\"{}main.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cmsis\+\_\+os.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}string.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}master\+\_\+task.\+h\char`\"{}}\newline
+Include dependency graph for main.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{main_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{main_8c_a739a2a1a0047c98ac1b18ecd25dac092}\label{main_8c_a739a2a1a0047c98ac1b18ecd25dac092}} 
+\#define {\bfseries RX\+\_\+\+BUFFER\+\_\+\+SIZE}~7
+\item 
+\mbox{\Hypertarget{main_8c_a9ab33647617098646990fe263600b650}\label{main_8c_a9ab33647617098646990fe263600b650}} 
+\#define {\bfseries TX\+\_\+\+BUFFER\+\_\+\+SIZE}~7
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{main_8c_a70af21c671abfcc773614a9a4f63d920}\label{main_8c_a70af21c671abfcc773614a9a4f63d920}} 
+void {\bfseries System\+Clock\+\_\+\+Config} (void)
+\item 
+void \mbox{\hyperlink{main_8c_a2ea65d0595444e033ed1a86219f07bd7}{Start\+Uart\+Task}} (void $\ast$argument)
+\begin{DoxyCompactList}\small\item\em UART Task\+: Processes received data and echoes it back. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{main_8c_a1730ffe1e560465665eb47d9264826f9}\label{main_8c_a1730ffe1e560465665eb47d9264826f9}} 
+void {\bfseries Error\+\_\+\+Handler} (void)
+\item 
+\mbox{\Hypertarget{main_8c_a0ca6fd0e6f77921dd1123539857ba0a8}\label{main_8c_a0ca6fd0e6f77921dd1123539857ba0a8}} 
+void \mbox{\hyperlink{main_8c_a0ca6fd0e6f77921dd1123539857ba0a8}{USART2\+\_\+\+IRQHandler}} (void)
+\begin{DoxyCompactList}\small\item\em This function handles USART2 global interrupt. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_ae494a9643f29b87d6d81e5264e60e57b}{HAL\+\_\+\+UART\+\_\+\+Rx\+Cplt\+Callback}} (UART\+\_\+\+Handle\+Type\+Def $\ast$huart)
+\begin{DoxyCompactList}\small\item\em Rx Transfer completed callback (called from ISR context). \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_abcdf9b59049eccbc87d54042f9235b1a}{HAL\+\_\+\+UART\+\_\+\+Tx\+Cplt\+Callback}} (UART\+\_\+\+Handle\+Type\+Def $\ast$huart)
+\begin{DoxyCompactList}\small\item\em Tx Transfer completed callback. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_a0e0456ea96d55db31de947fb3e954f18}{HAL\+\_\+\+UART\+\_\+\+Error\+Callback}} (UART\+\_\+\+Handle\+Type\+Def $\ast$huart)
+\begin{DoxyCompactList}\small\item\em UART error callback. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{main_8c_a840291bc02cba5474a4cb46a9b9566fe}\label{main_8c_a840291bc02cba5474a4cb46a9b9566fe}} 
+int {\bfseries main} (void)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{main_8c_aa9479c261d65eecedd3d9582f7f0f89c}\label{main_8c_aa9479c261d65eecedd3d9582f7f0f89c}} 
+UART\+\_\+\+Handle\+Type\+Def {\bfseries huart2}
+\item 
+\mbox{\Hypertarget{main_8c_a3d065e8db582b2a4c5e0d0f1acaddc0d}\label{main_8c_a3d065e8db582b2a4c5e0d0f1acaddc0d}} 
+uint8\+\_\+t {\bfseries rx\+Buffer} \mbox{[}RX\+\_\+\+BUFFER\+\_\+\+SIZE\mbox{]}
+\item 
+\mbox{\Hypertarget{main_8c_a7cda07c55a7ea82640dd18c803737cac}\label{main_8c_a7cda07c55a7ea82640dd18c803737cac}} 
+uint8\+\_\+t {\bfseries tx\+Buffer} \mbox{[}TX\+\_\+\+BUFFER\+\_\+\+SIZE\mbox{]}
+\item 
+\mbox{\Hypertarget{main_8c_af3853ef57496f6d08cdabe3d4dfca23b}\label{main_8c_af3853ef57496f6d08cdabe3d4dfca23b}} 
+os\+Thread\+Id\+\_\+t {\bfseries uart\+Task\+Handle}
+\item 
+\mbox{\Hypertarget{main_8c_a54e64713b2692101c3c9fceb150fa6ce}\label{main_8c_a54e64713b2692101c3c9fceb150fa6ce}} 
+os\+Message\+Queue\+Id\+\_\+t {\bfseries uart\+Rx\+Queue}
+\item 
+\mbox{\Hypertarget{main_8c_af27d9a357c8fc39278cf68a61ef01171}\label{main_8c_af27d9a357c8fc39278cf68a61ef01171}} 
+os\+Semaphore\+Id\+\_\+t {\bfseries uart\+Tx\+Semaphore}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\+: UART Interrupt RX/\+TX with CMSIS-\/\+RTOS V2 
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{main_8c_a0e0456ea96d55db31de947fb3e954f18}\label{main_8c_a0e0456ea96d55db31de947fb3e954f18}} 
+\index{main.c@{main.c}!HAL\_UART\_ErrorCallback@{HAL\_UART\_ErrorCallback}}
+\index{HAL\_UART\_ErrorCallback@{HAL\_UART\_ErrorCallback}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{HAL\_UART\_ErrorCallback()}{HAL\_UART\_ErrorCallback()}}
+{\footnotesize\ttfamily void HAL\+\_\+\+UART\+\_\+\+Error\+Callback (\begin{DoxyParamCaption}\item[{UART\+\_\+\+Handle\+Type\+Def $\ast$}]{huart }\end{DoxyParamCaption})}
+
+
+
+UART error callback. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em huart} & UART handle \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{main_8c_ae494a9643f29b87d6d81e5264e60e57b}\label{main_8c_ae494a9643f29b87d6d81e5264e60e57b}} 
+\index{main.c@{main.c}!HAL\_UART\_RxCpltCallback@{HAL\_UART\_RxCpltCallback}}
+\index{HAL\_UART\_RxCpltCallback@{HAL\_UART\_RxCpltCallback}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{HAL\_UART\_RxCpltCallback()}{HAL\_UART\_RxCpltCallback()}}
+{\footnotesize\ttfamily void HAL\+\_\+\+UART\+\_\+\+Rx\+Cplt\+Callback (\begin{DoxyParamCaption}\item[{UART\+\_\+\+Handle\+Type\+Def $\ast$}]{huart }\end{DoxyParamCaption})}
+
+
+
+Rx Transfer completed callback (called from ISR context). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em huart} & UART handle \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{main_8c_abcdf9b59049eccbc87d54042f9235b1a}\label{main_8c_abcdf9b59049eccbc87d54042f9235b1a}} 
+\index{main.c@{main.c}!HAL\_UART\_TxCpltCallback@{HAL\_UART\_TxCpltCallback}}
+\index{HAL\_UART\_TxCpltCallback@{HAL\_UART\_TxCpltCallback}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{HAL\_UART\_TxCpltCallback()}{HAL\_UART\_TxCpltCallback()}}
+{\footnotesize\ttfamily void HAL\+\_\+\+UART\+\_\+\+Tx\+Cplt\+Callback (\begin{DoxyParamCaption}\item[{UART\+\_\+\+Handle\+Type\+Def $\ast$}]{huart }\end{DoxyParamCaption})}
+
+
+
+Tx Transfer completed callback. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em huart} & UART handle \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{main_8c_a2ea65d0595444e033ed1a86219f07bd7}\label{main_8c_a2ea65d0595444e033ed1a86219f07bd7}} 
+\index{main.c@{main.c}!StartUartTask@{StartUartTask}}
+\index{StartUartTask@{StartUartTask}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{StartUartTask()}{StartUartTask()}}
+{\footnotesize\ttfamily void Start\+Uart\+Task (\begin{DoxyParamCaption}\item[{void $\ast$}]{argument }\end{DoxyParamCaption})}
+
+
+
+UART Task\+: Processes received data and echoes it back. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em argument} & Not used \\
+\hline
+\end{DoxyParams}

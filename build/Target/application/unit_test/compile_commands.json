@@ -1,0 +1,22 @@
+[
+{
+  "directory": "/RTOSP1/build/Target/application/unit_test",
+  "command": "/usr/bin/gcc -DUNITY_INCLUDE_EXECUTABLE -I/RTOSP1/Core/Inc -I/RTOSP1/tests/unity/src -I/RTOSP1/TTA_Protocol/Common -I/RTOSP1/TTA_Protocol/Master -g -std=gnu11 -o tests/CMakeFiles/test_master_fsm.dir/test_master_fsm.c.o -c /RTOSP1/tests/test_master_fsm.c",
+  "file": "/RTOSP1/tests/test_master_fsm.c"
+},
+{
+  "directory": "/RTOSP1/build/Target/application/unit_test",
+  "command": "/usr/bin/gcc -DUNITY_INCLUDE_EXECUTABLE -I/RTOSP1/Core/Inc -I/RTOSP1/tests/unity/src -I/RTOSP1/TTA_Protocol/Common -I/RTOSP1/TTA_Protocol/Master -g -std=gnu11 -o tests/CMakeFiles/test_master_fsm.dir/unity/src/unity.c.o -c /RTOSP1/tests/unity/src/unity.c",
+  "file": "/RTOSP1/tests/unity/src/unity.c"
+},
+{
+  "directory": "/RTOSP1/build/Target/application/unit_test",
+  "command": "/usr/bin/gcc -DUNITY_INCLUDE_EXECUTABLE -I/RTOSP1/Core/Inc -I/RTOSP1/tests/unity/src -I/RTOSP1/TTA_Protocol/Common -I/RTOSP1/TTA_Protocol/Master -g -std=gnu11 -o tests/CMakeFiles/test_master_fsm.dir/__/TTA_Protocol/Master/master_fsm.c.o -c /RTOSP1/TTA_Protocol/Master/master_fsm.c",
+  "file": "/RTOSP1/TTA_Protocol/Master/master_fsm.c"
+},
+{
+  "directory": "/RTOSP1/build/Target/application/unit_test",
+  "command": "/usr/bin/gcc -DUNITY_INCLUDE_EXECUTABLE -I/RTOSP1/Core/Inc -I/RTOSP1/tests/unity/src -I/RTOSP1/TTA_Protocol/Common -I/RTOSP1/TTA_Protocol/Master -g -std=gnu11 -o tests/CMakeFiles/test_master_fsm.dir/__/TTA_Protocol/Common/proto_frame.c.o -c /RTOSP1/TTA_Protocol/Common/proto_frame.c",
+  "file": "/RTOSP1/TTA_Protocol/Common/proto_frame.c"
+}
+]

@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include "proto_defs.h"
-#include "proto_frame.h"
 
 /**
  * @file master_fsm.h
