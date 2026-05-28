@@ -6,7 +6,11 @@
 # Build: docker build -t rtosp1-dev:latest .
 # Run:   docker-compose run --rm rtosp1-dev bash
 
-FROM ubuntu:22.04
+#FROM ubuntu:22.04
+# TO BE USED FOR ARMBASED CPU
+
+FROM --platform=linux/amd64 ubuntu:22.04
+#TO BE USED TO SUPPORT X64 CPU
 
 # Set non-interactive mode to avoid prompts during build
 ENV DEBIAN_FRONTEND=noninteractive \
