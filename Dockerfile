@@ -76,15 +76,31 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # INSTALL OPEN OCD TOO FOR permanent image
 
-RUN set -e && \
+
+
+# THIS FOR ARM GNU TOOLCHAIN, Suresh
+#RUN set -e && \
+   # echo "Installing ARM GNU Toolchain..." && \
+   # mkdir -p /opt/arm-toolchain && \
+   # cd /opt/arm-toolchain && \
+   # curl -L -o arm-gcc.tar.xz \
+    #arm-gnu-toolchain-14.3.rel1-aarch64-arm-none-eabi.tar.xz
+    #Please USE latest FILE above
+
+  #   https://developer.arm.com/-/media/Files/downloads/gnu/14.3.rel1/binrel/arm-gnu-toolchain-14.3.rel1-aarch64-arm-none-eabi.tar.xz && \
+  #  tar -xf arm-gcc.tar.xz && \
+   # rm arm-gcc.tar.xz && \
+   # mv arm-gnu-toolchain-14.3* gcc && \
+   # /opt/arm-toolchain/gcc/bin/arm-none-eabi-gcc --version
+ #. 
+
+
+ RUN set -e && \
     echo "Installing ARM GNU Toolchain..." && \
     mkdir -p /opt/arm-toolchain && \
     cd /opt/arm-toolchain && \
     curl -L -o arm-gcc.tar.xz \
-    #arm-gnu-toolchain-14.3.rel1-aarch64-arm-none-eabi.tar.xz
-    #Please USE latest FILE above
-
-     https://developer.arm.com/-/media/Files/downloads/gnu/14.3.rel1/binrel/arm-gnu-toolchain-14.3.rel1-aarch64-arm-none-eabi.tar.xz && \
+      https://developer.arm.com/-/media/Files/downloads/gnu/14.3.rel1/binrel/arm-gnu-toolchain-14.3.rel1-x86_64-arm-none-eabi.tar.xz && \
     tar -xf arm-gcc.tar.xz && \
     rm arm-gcc.tar.xz && \
     mv arm-gnu-toolchain-14.3* gcc && \
