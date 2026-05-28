@@ -1,3 +1,10 @@
+
+# This Docker file is USED for GITHUB Workflow not for using local environment inside MAC
+#IT can be used for X86 architecture though.
+
+
+
+
 # Multi-stage Dockerfile for RTOSP1 - Container-Only Development Environment
 # 
 # This container provides a complete isolated development environment
@@ -62,41 +69,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # ==============================================================================
-# Step 2: Install ARM GNU Toolchain (arm-none-eabi)
-# ==============================================================================
-# Version: 14.3.1 (matches your macOS installation)
-# Location: /opt/arm-toolchain/gcc (container standard path)
-#
-# This is the toolchain for compiling C code for ARM Cortex-M4 (STM32L4)
 
-#apt-get update
-#apt-get install -y software-properties-common
-#add-apt-repository ppa:deadsnakes/ppa
-#apt-get update
-#apt-get install -y python3.8 python3.8-dev
-
-
-# Downloads from xpack-dev-tools (same as Homebrew uses)
-
-# INSTALL OPEN OCD TOO FOR permanent image
-
-
-
-# THIS FOR ARM GNU TOOLCHAIN, Suresh
-#RUN set -e && \
-   # echo "Installing ARM GNU Toolchain..." && \
-   # mkdir -p /opt/arm-toolchain && \
-   # cd /opt/arm-toolchain && \
-   # curl -L -o arm-gcc.tar.xz \
-    #arm-gnu-toolchain-14.3.rel1-aarch64-arm-none-eabi.tar.xz
-    #Please USE latest FILE above
-
-  #   https://developer.arm.com/-/media/Files/downloads/gnu/14.3.rel1/binrel/arm-gnu-toolchain-14.3.rel1-aarch64-arm-none-eabi.tar.xz && \
-  #  tar -xf arm-gcc.tar.xz && \
-   # rm arm-gcc.tar.xz && \
-   # mv arm-gnu-toolchain-14.3* gcc && \
-   # /opt/arm-toolchain/gcc/bin/arm-none-eabi-gcc --version
- #. 
 
 
  RUN set -e && \
