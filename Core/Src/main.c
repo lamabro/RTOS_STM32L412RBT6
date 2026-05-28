@@ -10,7 +10,6 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "string.h"
-#include "master_task.h"
 
 /* UART Handles ------------------------------------------------------------*/
 UART_HandleTypeDef huart2;
@@ -104,7 +103,6 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 void StartUartTask(void *argument)
 {
     uint8_t receivedData[RX_BUFFER_SIZE];
-    uint8_t txBuffer[RX_BUFFER_SIZE];
     osStatus_t status;
     
     /* Initial delay to ensure system is ready */
@@ -119,18 +117,11 @@ void StartUartTask(void *argument)
         {
             /* Data received - transmit it back */
             /* Use blocking transmit with semaphore for synchronization */
-
-            Protocol_HandleRxFrame(receivedData, RX_BUFFER_SIZE);
-            /* Prepare next TX frame */
-            Protocol_GetNextTxFrame(txBuffer);
-
-            if (HAL_UART_Transmit_IT(&huart2, txBuffer, RX_BUFFER_SIZE) == HAL_OK)
+            if (HAL_UART_Transmit_IT(&huart2, receivedData, RX_BUFFER_SIZE) == HAL_OK)
             {
                 /* Wait for transmission to complete (with timeout) */
                 osSemaphoreAcquire(uartTxSemaphore, 100);
             }
-
-
             
             /* Optional: Blink LED to indicate activity */
             HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
@@ -149,9 +140,6 @@ int main(void)
     SystemClock_Config();
     MX_GPIO_Init();
     MX_USART2_UART_Init();
-    /* Protocol init (your existing code) */
-    Protocol_Init();
-
     
     /* Create RTOS objects before kernel start */
     
