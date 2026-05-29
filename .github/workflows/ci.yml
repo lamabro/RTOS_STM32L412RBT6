@@ -29,12 +29,6 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Create build directories
-        run: |
-          mkdir -p build/Target/application/Debug
-          mkdir -p build/Target/application/Release
-          mkdir -p build/Target/application/unit_test
-
       - name: Build Docker image
         run: docker build -t rtos-dev .
 
@@ -45,19 +39,19 @@ jobs:
               -v ${{ github.workspace }}:/workspace \
               -w /workspace \
               rtos-dev \
-              cmake -S . -B build/Target/application/Debug --preset=Debug-Application
+              bash -c "mkdir -p build/Target/application/Debug && cmake -S . -B build/Target/application/Debug --preset=Debug-Application"
           elif [ "${{ matrix.preset }}" = "Release-Application" ]; then
             docker run --rm \
               -v ${{ github.workspace }}:/workspace \
               -w /workspace \
               rtos-dev \
-              cmake -S . -B build/Target/application/Release --preset=Release-Application
+              bash -c "mkdir -p build/Target/application/Release && cmake -S . -B build/Target/application/Release --preset=Release-Application"
           else
             docker run --rm \
               -v ${{ github.workspace }}:/workspace \
               -w /workspace \
               rtos-dev \
-              cmake -S . -B build/Target/application/unit_test --preset=Debug-UnitTest
+              bash -c "mkdir -p build/Target/application/unit_test && cmake -S . -B build/Target/application/unit_test --preset=Debug-UnitTest"
           fi
 
       - name: Build inside Docker
