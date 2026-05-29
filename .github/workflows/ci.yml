@@ -15,10 +15,13 @@ jobs:
       matrix:
         include:
           - preset: Debug-Application
+            build_dir: "build-debug"
             description: "Application Debug"
           - preset: Release-Application
+            build_dir: "build-release"
             description: "Application Release"
           - preset: Debug-UnitTest
+            build_dir: "build-test"
             description: "Unit Tests"
 
     name: Build ${{ matrix.description }}
@@ -34,47 +37,19 @@ jobs:
 
       - name: Configure CMake inside Docker
         run: |
-          if [ "${{ matrix.preset }}" = "Debug-Application" ]; then
-            docker run --rm \
-              -v ${{ github.workspace }}:/workspace \
-              -w /workspace \
-              rtos-dev \
-              bash -c "mkdir -p build/Target/application/Debug && cmake -S . -B build/Target/application/Debug --preset=Debug-Application"
-          elif [ "${{ matrix.preset }}" = "Release-Application" ]; then
-            docker run --rm \
-              -v ${{ github.workspace }}:/workspace \
-              -w /workspace \
-              rtos-dev \
-              bash -c "mkdir -p build/Target/application/Release && cmake -S . -B build/Target/application/Release --preset=Release-Application"
-          else
-            docker run --rm \
-              -v ${{ github.workspace }}:/workspace \
-              -w /workspace \
-              rtos-dev \
-              bash -c "mkdir -p build/Target/application/unit_test && cmake -S . -B build/Target/application/unit_test --preset=Debug-UnitTest"
-          fi
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            rtos-dev \
+            cmake -S . -B ${{ matrix.build_dir }} --preset=${{ matrix.preset }}
 
       - name: Build inside Docker
         run: |
-          if [ "${{ matrix.preset }}" = "Debug-Application" ]; then
-            docker run --rm \
-              -v ${{ github.workspace }}:/workspace \
-              -w /workspace \
-              rtos-dev \
-              ninja -C build/Target/application/Debug
-          elif [ "${{ matrix.preset }}" = "Release-Application" ]; then
-            docker run --rm \
-              -v ${{ github.workspace }}:/workspace \
-              -w /workspace \
-              rtos-dev \
-              ninja -C build/Target/application/Release
-          else
-            docker run --rm \
-              -v ${{ github.workspace }}:/workspace \
-              -w /workspace \
-              rtos-dev \
-              ninja -C build/Target/application/unit_test
-          fi
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            rtos-dev \
+            ninja -C ${{ matrix.build_dir }}
 
       - name: Run Unit Tests inside Docker
         if: matrix.preset == 'Debug-UnitTest'
@@ -83,7 +58,7 @@ jobs:
             -v ${{ github.workspace }}:/workspace \
             -w /workspace \
             rtos-dev \
-            ctest --test-dir build/Target/application/unit_test --output-on-failure -V
+            ctest --test-dir ${{ matrix.build_dir }} --output-on-failure -V
 
       - name: Run Cppcheck inside Docker
         run: |
