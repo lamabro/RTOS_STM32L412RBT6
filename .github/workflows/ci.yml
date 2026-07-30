@@ -1,0 +1,80 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - preset: Debug-Application
+            build_dir: "build-debug"
+            description: "Application Debug"
+          - preset: Release-Application
+            build_dir: "build-release"
+            description: "Application Release"
+          - preset: Debug-UnitTest
+            build_dir: "build-test"
+            description: "Unit Tests"
+
+    name: Build ${{ matrix.description }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build Docker image
+        run: docker build -t rtos-dev .
+
+      - name: Configure CMake inside Docker
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            rtos-dev \
+            cmake -S . -B ${{ matrix.build_dir }} --preset=${{ matrix.preset }}
+
+      - name: Build inside Docker
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            rtos-dev \
+            ninja -C ${{ matrix.build_dir }}
+
+      - name: Run Unit Tests inside Docker
+        if: matrix.preset == 'Debug-UnitTest'
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            rtos-dev \
+            ctest --test-dir ${{ matrix.build_dir }} --output-on-failure -V
+
+      - name: Run Cppcheck inside Docker
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            rtos-dev \
+            cppcheck --enable=all \
+                     --std=c11 \
+                     --suppress=missingIncludeSystem \
+                     --error-exitcode=1 \
+                     Core/Src/main.c \
+                     Core/Src/freertos.c \
+                     Core/Src/stm32l4xx_it.c \
+                     Core/Src/stm32l4xx_hal_msp.c \
+                     Core/Src/system_stm32l4xx.c \
+                     TTA_Protocol/Master/*.c \
+                     TTA_Protocol/Slave/*.c \
+                     TTA_Protocol/Common/*.c

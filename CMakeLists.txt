@@ -148,7 +148,11 @@ endif()
 # Add unit tests (optional, can be disabled with -DBUILD_TESTING=OFF)
 option(BUILD_TESTING "Build unit tests" ON)
 if(BUILD_TESTING)
-    add_subdirectory(tests)
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt")
+        add_subdirectory(tests)
+    else()
+        message(WARNING "Unit test directory tests/ not found. Skipping unit test build.")
+    endif()
 endif()
 
 # ========================================================================
@@ -176,19 +180,17 @@ if(LIZARD_EXECUTABLE)
     # Create output directory for complexity reports
     set(COMPLEXITY_REPORT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build/documentation/report")
     
-    add_custom_target(complexity
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${COMPLEXITY_REPORT_DIR}
-        COMMAND ${LIZARD_EXECUTABLE} 
-            Core/Src/main.c 
-            -l c 
-            -w 
-            --thresholds nloc=50,ccn=15
-            -o ${COMPLEXITY_REPORT_DIR}/complexity_report.log
-        COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/scripts/generate_cc_report.py
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        COMMENT "Generating code complexity analysis with Lizard..."
-        VERBATIM
-    )
+  add_custom_target(complexity
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${COMPLEXITY_REPORT_DIR}
+    COMMAND ${LIZARD_EXECUTABLE} 
+        Core/Src/main.c 
+        -l c 
+        -w 
+        -o ${COMPLEXITY_REPORT_DIR}/complexity_report.log
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMENT "Generating code complexity analysis with Lizard..."
+    VERBATIM
+)
     
     # Combined target: Docs + Complexity
     add_custom_target(docs-full

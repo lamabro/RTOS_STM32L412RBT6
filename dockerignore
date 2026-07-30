@@ -1,0 +1,55 @@
+# .dockerignore - Patterns to exclude from Docker build context
+# These files aren't needed inside the container
+
+# Build artifacts (will be recreated in container)
+build/
+Debug/
+Release/
+*.o
+*.a
+*.elf
+*.bin
+*.hex
+*.map
+
+# Version control
+.git/
+.github/
+.gitignore
+
+# IDE and editors
+.vscode/
+.idea/
+.clion/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Documentation build artifacts
+doxygen.log
+Doxyfile.bak
+
+# CMake cache (rebuilt in container)
+CMakeCache.txt
+cmake_install.cmake
+CMakeFiles/
+
+# Temporary files
+*.tmp
+*.log
+*.ctu-info
+Untitled-1
+
+# Node modules (if any)
+node_modules/
+package-lock.json
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment files
+.env
+.env.local
