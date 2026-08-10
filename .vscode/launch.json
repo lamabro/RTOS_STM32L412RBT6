@@ -12,6 +12,9 @@
             "gdbTarget": "host.docker.internal:4242",
             //"gdbTarget": "host.docker.internal:2331",
             `//For jlink server type, uncomment above
+
+            // "gdbTarget": "host.docker.internal:3333",  for openocd
+
 `
             "device": "STM32L412RB",
             "interface": "swd",
@@ -29,6 +32,8 @@
             "gdbTarget": "host.docker.internal:4242",
             //"gdbTarget": "host.docker.internal:2331",
             `//For jlink server type, uncomment above
+            // "gdbTarget": "host.docker.internal:3333",  for openocd
+
 
             "device": "STM32L412RB",
             "interface": "swd",
