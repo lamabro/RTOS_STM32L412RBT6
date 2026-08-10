@@ -1,44 +1,42 @@
 {
+
+    // our project is running in a devcontainer, the ST-LINK USB device is not normally available inside the container, hence
+    // we use the host.docker.internal address to connect to the ST-LINK GDB server running on the host machine
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug Application",
+            "name": "Debug Application (ST-Link)",
             "type": "cortex-debug",
             "request": "launch",
-
             "servertype": "external",
-            "gdbTarget": "host.docker.internal:2331",
-
+            "gdbTarget": "host.docker.internal:4242",
+            //"gdbTarget": "host.docker.internal:2331",
+            `//For jlink server type, uncomment above
+`
             "device": "STM32L412RB",
             "interface": "swd",
-
-           "executable": "/RTOSP1/build/Target/application/Debug/RTOSP_STM32L412RB.elf",
-           // "executable": "/RTOSP1/Debug/RTOS_STM32L412RB.elf", 
-            // manually set because WorkspaceFolder does not work inside container, so we need to set the absolute path for the executable
+            "executable": "${workspaceFolder}/build/Target/application/Debug/RTOSP_STM32L412RB.elf",
             "runToEntryPoint": "main",
             "preLaunchTask": "Build App Debug",
-
             "svdFile": "",
-            "searchDir": "/RTOSP1/build/Target/application/Debug"
+            "searchDir": "${workspaceFolder}/build/Target/application/Debug"
         },
-
         {
-            "name": "Debug Bootloader",
+            "name": "Debug Bootloader (ST-Link)",
             "type": "cortex-debug",
             "request": "launch",
-
             "servertype": "external",
-            "gdbTarget": "host.docker.internal:2331",
+            "gdbTarget": "host.docker.internal:4242",
+            //"gdbTarget": "host.docker.internal:2331",
+            `//For jlink server type, uncomment above
 
             "device": "STM32L412RB",
             "interface": "swd",
-
-            "executable": "/RTOSP1/build/Target/bootloader/Debug/RTOSP_STM32L412RB.elf",
+            "executable": "${workspaceFolder}/build/Target/bootloader/Debug/RTOSP_STM32L412RB.elf",
             "runToEntryPoint": "main",
             "preLaunchTask": "Build BL Debug",
-
             "svdFile": "",
-            "searchDir": "/RTOSP1/build/Target/application/Debug"
+            "searchDir": "${workspaceFolder}/build/Target/bootloader/Debug"
         }
     ]
 }
