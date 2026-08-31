@@ -70,8 +70,8 @@ all: main-build
 main-build: RTOS_STM32L412RB.elf secondary-outputs
 
 # Tool invocations
-RTOS_STM32L412RB.elf RTOS_STM32L412RB.map: $(OBJS) $(USER_OBJS) /Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/STM32L412RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "RTOS_STM32L412RB.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/STM32L412RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RTOS_STM32L412RB.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+RTOS_STM32L412RB.elf RTOS_STM32L412RB.map: $(OBJS) $(USER_OBJS) /Users/sureshlama/RTOS_STM32L412RBT6/STM32L412RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "RTOS_STM32L412RB.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/Users/sureshlama/RTOS_STM32L412RBT6/STM32L412RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="RTOS_STM32L412RB.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

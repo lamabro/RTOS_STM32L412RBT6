@@ -10,6 +10,8 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "string.h"
+#include "master_task.h"
+#include "string.h"
 
 /* UART Handles ------------------------------------------------------------*/
 UART_HandleTypeDef huart2;
@@ -72,7 +74,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
     if (huart->Instance == USART2)
     {
         /* Signal that transmission is complete */
-        osSemaphoreRelease(uartTxSemaphore);
+       // osSemaphoreRelease(uartTxSemaphore);
     }
 }
 
@@ -104,31 +106,33 @@ void StartUartTask(void *argument)
 {
     uint8_t receivedData[RX_BUFFER_SIZE];
     osStatus_t status;
-    
-    /* Initial delay to ensure system is ready */
-    osDelay(100);
-    
+
+    memset(txBuffer, 0, sizeof(txBuffer));
+
     for (;;)
     {
         /* Wait for data from queue (block until data arrives) */
-        status = osMessageQueueGet(uartRxQueue, receivedData, NULL, osWaitForever);
-        
+        status = osMessageQueueGet(uartRxQueue, receivedData, NULL, 10);
+
         if (status == osOK)
         {
-            /* Data received - transmit it back */
-            /* Use blocking transmit with semaphore for synchronization */
-            if (HAL_UART_Transmit_IT(&huart2, receivedData, RX_BUFFER_SIZE) == HAL_OK)
+            /* Handle incoming frame and prepare response */
+            MasterFSM_HandleRxFrame(receivedData, RX_BUFFER_SIZE);
+            osDelay(20);
+            Protocol_GetNextTxFrame(txBuffer);
+
+            if (HAL_UART_Transmit_IT(&huart2, txBuffer, sizeof(txBuffer)) == HAL_OK)
             {
                 /* Wait for transmission to complete (with timeout) */
                 osSemaphoreAcquire(uartTxSemaphore, 100);
             }
-            
+
             /* Optional: Blink LED to indicate activity */
             HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
         }
-        
-        /* Allow other tasks to run */
-        osDelay(1);
+
+        /* Schedule the task again after 1 second */
+        osDelay(1000);
     }
 }
 
@@ -140,6 +144,7 @@ int main(void)
     SystemClock_Config();
     MX_GPIO_Init();
     MX_USART2_UART_Init();
+    
     
     /* Create RTOS objects before kernel start */
     
@@ -166,6 +171,9 @@ int main(void)
     HAL_UART_Receive_IT(&huart2, rxBuffer, RX_BUFFER_SIZE);
     
     /* Start RTOS kernel */
+    Protocol_Init();
+   
+
     osKernelInitialize();
     osKernelStart();
     

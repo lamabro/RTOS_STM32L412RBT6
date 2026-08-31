@@ -28,23 +28,23 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
- /Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
- /Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
+ /Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
+ /Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
  ../Core/Inc/FreeRTOSConfig.h \
- /Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
- /Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/include/portable.h \
- /Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
- /Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h \
- /Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
- /Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- /Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
- /Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- /Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/TTA_Protocol/Master/master_task.h \
- /Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/TTA_Protocol/Master/master_fsm.h \
- /Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/TTA_Protocol/Common/proto_defs.h \
- /Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/TTA_Protocol/Common/proto_frame.h \
- /Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/TTA_Protocol/Common/proto_defs.h \
- /Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/TTA_Protocol/Master/master_scheduler.h
+ /Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
+ /Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/include/portable.h \
+ /Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
+ /Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h \
+ /Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
+ /Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
+ /Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
+ /Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
+ /Users/sureshlama/RTOS_STM32L412RBT6/TTA_Protocol/Master/master_task.h \
+ /Users/sureshlama/RTOS_STM32L412RBT6/TTA_Protocol/Master/master_fsm.h \
+ /Users/sureshlama/RTOS_STM32L412RBT6/TTA_Protocol/Common/proto_defs.h \
+ /Users/sureshlama/RTOS_STM32L412RBT6/TTA_Protocol/Common/proto_frame.h \
+ /Users/sureshlama/RTOS_STM32L412RBT6/TTA_Protocol/Common/proto_defs.h \
+ /Users/sureshlama/RTOS_STM32L412RBT6/TTA_Protocol/Master/master_scheduler.h
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
@@ -75,20 +75,20 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
-/Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
-/Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
+/Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
+/Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
 ../Core/Inc/FreeRTOSConfig.h:
-/Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
-/Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/include/portable.h:
-/Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h:
-/Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h:
-/Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h:
-/Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
-/Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
-/Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
-/Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/TTA_Protocol/Master/master_task.h:
-/Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/TTA_Protocol/Master/master_fsm.h:
-/Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/TTA_Protocol/Common/proto_defs.h:
-/Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/TTA_Protocol/Common/proto_frame.h:
-/Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/TTA_Protocol/Common/proto_defs.h:
-/Users/sureshlama/Bootloader_L4Q5VGT6/RTOS_STM32L412RB/TTA_Protocol/Master/master_scheduler.h:
+/Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
+/Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/include/portable.h:
+/Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h:
+/Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h:
+/Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h:
+/Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
+/Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
+/Users/sureshlama/RTOS_STM32L412RBT6/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
+/Users/sureshlama/RTOS_STM32L412RBT6/TTA_Protocol/Master/master_task.h:
+/Users/sureshlama/RTOS_STM32L412RBT6/TTA_Protocol/Master/master_fsm.h:
+/Users/sureshlama/RTOS_STM32L412RBT6/TTA_Protocol/Common/proto_defs.h:
+/Users/sureshlama/RTOS_STM32L412RBT6/TTA_Protocol/Common/proto_frame.h:
+/Users/sureshlama/RTOS_STM32L412RBT6/TTA_Protocol/Common/proto_defs.h:
+/Users/sureshlama/RTOS_STM32L412RBT6/TTA_Protocol/Master/master_scheduler.h:

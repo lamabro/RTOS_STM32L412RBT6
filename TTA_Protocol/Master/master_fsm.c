@@ -132,91 +132,79 @@ MASTER_STATE_DISCOVERY,         /**< Searching for slaves */
    
 
     MessageID_t msgID = (MessageID_t)frame[1];
-    // 
-    uint8_t payload   = frame[4];
+    uint8_t payload = frame[4];
 
     switch (msgID)
     {
         case MSG_ID_ACK:
+        {
+            uint8_t exists = 0;
 
-        
+            for (int i = 0; i < g_masterFsm.protoState->addressTable.slaveCount; i++)
+            {
+                if (g_masterFsm.protoState->addressTable.slaveAddress[i] == payload)
+                {
+                    exists = 1;
+                    break;
+                }
+            }
 
-// Check if slave is already known 
-uint8_t exists = 0;
+            if (exists)
+            {
+                g_masterFsm.protoState->statusByte.bits.commRunning = 1;
+                g_masterFsm.state = MASTER_STATE_NORMAL_OPERATION;
+            }
+            else
+            {
+                if (g_masterFsm.protoState->addressTable.slaveCount < MAX_SLAVES)
+                {
+                    g_masterFsm.protoState->addressTable.slaveAddress[
+                        g_masterFsm.protoState->addressTable.slaveCount++
+                    ] = payload;
+                }
 
-    for (int i = 0; i < g_masterFsm.protoState->addressTable.slaveCount; i++) {
-        if (g_masterFsm.protoState->addressTable.slaveAddress[i] == payload) {
-            exists = 1;
-            break;   // exits ONLY the for-loop
+                g_masterFsm.protoState->statusByte.bits.commRunning = 1;
+                g_masterFsm.state = MASTER_STATE_NORMAL_OPERATION;
+            }
+            break;
         }
-    }
-// if slave is already known, just move to next state
-
-    // This is yet to be configured correctly.
-
-    if (exists) {
-        // Slave already known → exit switch case immediately
-        g_masterFsm.protoState->statusByte.bits.commRunning = 1;
-        g_masterFsm.state = MASTER_STATE_NORMAL_OPERATION;
-        break;   // exits the SWITCH case
-    }
-
-    // Else state is changed to Master State discovery for new slave addr
-    g_masterFsm.protoState->statusByte.bits.commRunning = 1;
-    g_masterFsm.state = MASTER_STATE_DISCOVERY;
-
-    break;
-
-
-
-            
-
-
 
         case MSG_ID_DISCOVER:
-// This would process the discovery message and add new slave to the address table if not already present
-//uint8_t exists = 0;
-// Chesk if slave is already known
-    for (int i = 0; i < g_masterFsm.protoState->addressTable.slaveCount; i++) {
-        if (g_masterFsm.protoState->addressTable.slaveAddress[i] == payload) {
-            exists = 1;
-            break;   // exits ONLY the for-loop
-        }
-    }
+        {
+            uint8_t exists = 0;
 
-    if (exists) {
-        // Slave already known → exit switch case immediately for next State confirmation
-        g_masterFsm.protoState->statusByte.bits.commRunning = 1;
-        g_masterFsm.state = MASTER_STATE_PRESENCE_CHECK;
-        break;   // exits the SWITCH case
-    }
+            for (int i = 0; i < g_masterFsm.protoState->addressTable.slaveCount; i++)
+            {
+                if (g_masterFsm.protoState->addressTable.slaveAddress[i] == payload)
+                {
+                    exists = 1;
+                    break;
+                }
+            }
 
-    // Slave is NEW → add it
-    g_masterFsm.protoState->addressTable.slaveAddress[
-        g_masterFsm.protoState->addressTable.slaveCount++
-    ] = payload;   // New address added to table of slaves
-
-    g_masterFsm.protoState->statusByte.bits.commRunning = 1;
-    g_masterFsm.state = MASTER_STATE_PRESENCE_CHECK;
-
-    break;
-
+            if (exists)
+            {
+                g_masterFsm.protoState->statusByte.bits.commRunning = 1;
+                g_masterFsm.state = MASTER_STATE_PRESENCE_CHECK;
+                break;
+            }
 
     
+
+            g_masterFsm.protoState->statusByte.bits.commRunning = 1;
+            g_masterFsm.state = MASTER_STATE_PRESENCE_CHECK;
+            break;
+        }
 
         case MSG_ID_STATUS_REQ:
             g_masterFsm.protoState->statusByte.bits.commRunning = 1;
             g_masterFsm.state = MASTER_STATE_NORMAL_OPERATION;
             break;
-        
 
         case MSG_ID_COMMAND:
             g_masterFsm.protoState->statusByte.bits.commRunning = 1;
             g_masterFsm.state = MASTER_STATE_NORMAL_OPERATION;
             break;
-
-        
-         
 
         default:
             break;
