@@ -74,7 +74,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
     if (huart->Instance == USART2)
     {
         /* Signal that transmission is complete */
-       // osSemaphoreRelease(uartTxSemaphore);
+       osSemaphoreRelease(uartTxSemaphore);
     }
 }
 
@@ -118,20 +118,29 @@ void StartUartTask(void *argument)
         {
             /* Handle incoming frame and prepare response */
             MasterFSM_HandleRxFrame(receivedData, RX_BUFFER_SIZE);
-            osDelay(20);
+            osDelay(10);
             Protocol_GetNextTxFrame(txBuffer);
 
             if (HAL_UART_Transmit_IT(&huart2, txBuffer, sizeof(txBuffer)) == HAL_OK)
             {
                 /* Wait for transmission to complete (with timeout) */
-                osSemaphoreAcquire(uartTxSemaphore, 100);
+                osSemaphoreAcquire(uartTxSemaphore, 10);
             }
 
             /* Optional: Blink LED to indicate activity */
-            HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+          //   HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
         }
+        else
+             if (HAL_UART_Transmit_IT(&huart2, txBuffer, sizeof(txBuffer)) == HAL_OK)
+            {
+                /* Wait for transmission to complete (with timeout) */
+                osSemaphoreAcquire(uartTxSemaphore, 10);
+            }
+
+        
 
         /* Schedule the task again after 1 second */
+
         osDelay(1000);
     }
 }
