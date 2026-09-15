@@ -4,6 +4,26 @@ RTOSP1 is an STM32 real-time embedded project that imitates the principles of a 
 
 This repository is an engineering and learning reference implementation. It is not a certified safety product and must not be treated as a replacement for the requirements, verification, validation, or certification activities of a production safety system.
 
+#Note.  Target is that
+all individual nodes will send the data at their specific slots not all at same time
+build simplex communications meaning device can send or read only at a time instead of both.
+
+Each at its own slot and cycle
+0ms.      none send and everyone listening
+50ms.    Only master send the data and all other nodes listen
+
+100ms.    Only Node 1 send , all other devices listen to it.
+
+150ms.    ONly Node 2 send , all other devices listen to it.
+
+Each nodes will run a cycle of 150ms to get its time to send.
+
+Eg Master  cycle to send is 50ms---200ms---350--ms
+
+Eg Node 1.   100ms--250ms--400ms
+Eg Node 2.   150ms--300ms--450ms---
+
+
 ## Project Goals
 
 - Implement a modular TTA-inspired communication protocol for an embedded target.
